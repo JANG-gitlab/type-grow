@@ -22,6 +22,8 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;overscroll-behavi
 .sw i{width:10px;height:10px;border-radius:999px}
 .btn{background:transparent;border:1px solid #3a3a3a;color:#bdbdbd;font:inherit;padding:8px 14px;border-radius:999px;cursor:pointer}
 .btn:hover{border-color:#fff;color:#fff}
+select.btn{-webkit-appearance:none;appearance:none;padding-right:28px;background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 15px) 52%,calc(100% - 11px) 52%;background-size:4px 4px;background-repeat:no-repeat;max-width:46vw}
+#hints{transition:opacity .9s}
 .coarse{display:none}
 @media (pointer:coarse){.fine{display:none}.coarse{display:inline}}
 @media (max-width:600px){
@@ -32,6 +34,7 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;overscroll-behavi
   .sw{width:clamp(13px,calc((100vw - 183px) / 10),22px);height:clamp(13px,calc((100vw - 183px) / 10),22px)}
   .sw i{width:46%;height:46%}
   .btn{padding:7px 11px}
+  select.btn{max-width:34vw;padding-right:24px;text-overflow:ellipsis}
 }
 </style>
 </head>
@@ -41,13 +44,14 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;overscroll-behavi
   <input id="inp" aria-label="Taper pour faire pousser un jardin" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false">
   <div id="bar">
     <div id="hints">
-      <span class="fine">écris un mot : rose, chat, œil, pomme, neige, 火, 愛, قلب…</span><span class="coarse">touche pour écrire</span>
+      <span class="fine">écris la plante de ton choix : rose, lavande, cerisier, tournesol, et même chat, fusée, 火, 愛…</span><span class="coarse">touche et écris la plante de ton choix</span>
       <span>espace coupe</span>
       <span class="fine">retour arrière fane</span>
       <span id="rec" style="opacity:1;font-weight:500"></span>
     </div>
     <div id="ctrls">
       <div id="pal"></div>
+      <select class="btn" id="motif" aria-label="un seul motif pour tout le texte" title="un seul motif pour tout le texte"></select>
       <button class="btn" id="mode"></button>
       <button class="btn" id="png">PNG</button>
       <button class="btn" id="svg">SVG</button>
@@ -134,7 +138,7 @@ class Garden {
     marguerite: ['marguerite', 'daisy', 'paquerette'], tulipe: ['tulipe', 'tulip', 'printemps', 'spring'], amour: ['coeur', 'amour', 'love', 'heart'],
     etoile: ['etoile', 'star', 'nuit', 'night', 'ciel', 'galaxie'], neige: ['neige', 'snow', 'hiver', 'winter', 'flocon', 'noel', 'glace'],
     feu: ['feu', 'flamme', 'fire', 'flame', 'braise'], papillon: ['papillon', 'butterfly'],
-    arbre: ['foret', 'arbre', 'forest', 'tree'], plante: ['vert', 'nature', 'leaf', 'feuille', 'jungle', 'plante']
+    arbre: ['foret', 'arbre', 'forest', 'tree'], jardin: ['jardin', 'garden'], plante: ['vert', 'nature', 'leaf', 'feuille', 'jungle', 'plante']
   };
   COLORS = {
     '#E5231B': ['rouge', 'red', '赤', '赤い', 'あかい', '红', '红色', 'أحمر'], '#2F6BFF': ['bleu', 'blue', '青', '青い', 'あおい', '蓝', '蓝色', 'أزرق'],
@@ -174,7 +178,7 @@ class Garden {
     this.ptype = 'mouse';
     this.palette = 0; this.duo = false;
     try { const sv = JSON.parse(localStorage.getItem('tg-pal') || '{}'); if (this.PALS[sv.p]) this.palette = sv.p; this.duo = !!sv.d; } catch (e) { /* stockage indisponible */ }
-    this.buildPalette(); this.applyPalette();
+    this.buildPalette(); this.applyPalette(); this.buildMotifs();
 
     window.addEventListener('resize', () => this.resize());
     window.addEventListener('keydown', e => this.key(e));
@@ -226,7 +230,51 @@ class Garden {
     if (pre) {
       [...pre].forEach((ch, i) => setTimeout(() => this.add(ch === '\n' ? ' ' : ch, performance.now()), 400 + i * 70));
       setTimeout(() => this.retag(performance.now(), true), 500 + pre.length * 70);
-    }
+    } else this.startIntro();
+  }
+
+  // ---------- accueil ----------
+  // « Grow your garden » s'écrit tout seul au milieu, l'aide apparaît ensuite, et le tout fane dès qu'on tape
+  startIntro() {
+    const txt = 'Grow your garden', el = document.getElementById('hints');
+    el.style.opacity = '0';
+    this.intro = [...txt].map((ch, i) => setTimeout(() => this.add(ch, performance.now()), 600 + i * 110));
+    this.intro.push(setTimeout(() => this.retag(performance.now(), true), 700 + txt.length * 110));
+    this.intro.push(setTimeout(() => { el.style.opacity = ''; }, 1400 + txt.length * 110));
+  }
+  endIntro(now) {
+    if (!this.intro) return;
+    this.intro.forEach(clearTimeout); this.intro = null;
+    document.getElementById('hints').style.opacity = '';
+    this.letters.forEach(l => { if (!l.dead) l.dead = now; });
+    this.refresh(now);
+  }
+
+  // ---------- un seul motif pour tout le texte ----------
+  MOTIFS = [
+    ['fleurs', 'rose lavande tulipe tournesol marguerite coquelicot sakura pivoine lys orchidee lotus muguet'],
+    ['arbres et plantes', 'chene sapin palmier bambou cactus champignon'],
+    ['fruits', 'pomme cerise citron orange banane raisin'],
+    ['ciel et nature', 'etoile lune nuage neige feu amour arcenciel papillon'],
+    ['animaux', 'chat chien licorne dragon'],
+    ['objets', 'avion voiture bateau velo fusee maison couronne parapluie ballon livre cadeau robot fantome']
+  ];
+  LABELS = { orchidee: 'orchidée', chene: 'chêne', etoile: 'étoile', amour: 'cœur', arcenciel: 'arc-en-ciel', fusee: 'fusée', fantome: 'fantôme', velo: 'vélo', muguet: 'muguet', lys: 'lys' };
+  buildMotifs() {
+    const sel = document.getElementById('motif');
+    sel.innerHTML = '<option value="">motif : libre</option>' + this.MOTIFS.map(([g, ids]) => `<optgroup label="${g}">` +
+      ids.split(' ').filter(id => this.CATS[id]).map(id => `<option value="${id}">tout en ${this.LABELS[id] || id}</option>`).join('') + '</optgroup>').join('');
+    try { const f = localStorage.getItem('tg-motif'); if (f && this.CATS[f]) { this.force = f; sel.value = f; } } catch (e) { /* stockage indisponible */ }
+    sel.onchange = () => { this.setForce(sel.value); this.refocus(); };
+  }
+  setForce(id) {
+    this.force = this.CATS[id] ? id : null;
+    try { localStorage.setItem('tg-motif', this.force || ''); } catch (e) { /* stockage indisponible */ }
+    const now = performance.now(), runs = []; let cur = [];
+    for (const l of this.letters) { if (l.dead) continue; if (l.ch === ' ') { if (cur.length) runs.push(cur); cur = []; } else cur.push(l); }
+    // les mots déjà écrits repoussent dans le nouveau motif, le dernier est relu comme à chaque frappe
+    for (const w of runs) { w.forEach(l => { l.pg = 0; }); this.apply(w, this.segment(w, true), now); }
+    this.retag(now, !cur.length);
   }
 
   // ---------- lexique ----------
@@ -318,6 +366,7 @@ class Garden {
   }
   // découpe le dernier mot en morceaux (le chinois et le japonais se lisent du plus long au plus court)
   segment(run, closed) {
+    if (this.force) { const k = this.CATS[this.force]; return { out: run.map(() => k), cnt: run.map(() => 0) }; }
     const text = run.map(l => l.ch).join(''), out = new Array(run.length), cnt = new Array(run.length).fill(0);
     const put = (from, to, k, last) => {
       const m = to - from;
@@ -350,7 +399,7 @@ class Garden {
     const rec = document.getElementById('rec'), run = cur;
     if (!run.length) { rec.textContent = ''; this.syncCrits(now); return; }
     // expressions de plusieurs mots : les derniers mots lus ensemble (star wars, harry potter…)
-    for (let n = Math.min(4, runs.length); n >= 2; n--) {
+    for (let n = this.force ? 0 : Math.min(4, runs.length); n >= 2; n--) {
       const ws = runs.slice(-n), id = this.phr.get(this.norm(ws.map(w => w.map(l => l.ch).join('')).join('')));
       if (!id || !this.CATS[id]) continue;
       const k = this.CATS[id];
@@ -456,6 +505,7 @@ class Garden {
     document.getElementById('hints').style.color = ui;
     document.getElementById('pal').style.background = p.bg;
     document.querySelectorAll('.btn').forEach(b => { b.style.color = ui; b.style.borderColor = this.mix(ui, p.bg, 0.65); });
+    document.getElementById('motif').style.backgroundColor = p.bg;
     const md = document.getElementById('mode');
     md.textContent = this.duo ? 'duo' : 'naturel';
     md.title = this.duo ? 'tout le jardin dans les couleurs de la palette' : 'chaque motif garde ses couleurs';
@@ -727,7 +777,9 @@ class Garden {
   layout(snap) {
     if (!this.W) return;
     const A = this.letters.filter(l => !l.dead);
-    const res = this.layoutCore(A, this.W, this.H, this.wrapped);
+    // sur mobile la barre du bas prend de la place : le texte se range au-dessus
+    const bar = document.getElementById('bar'), bt = this.W < 600 && bar ? bar.getBoundingClientRect().top - this.cv.getBoundingClientRect().top : this.H;
+    const res = this.layoutCore(A, this.W, Math.max(this.H * 0.55, Math.min(this.H, bt - 8)), this.wrapped);
     this.wrapped = res.wrapped;
     A.forEach(l => { if (l.x == null) { l.x = l.tx; l.y = l.ty; } });
     const S = res.S, last = A[A.length - 1];
@@ -756,6 +808,7 @@ class Garden {
     let dels = old.length - p;
     if (p === 0 && old[0] === S && old.length > 1) dels -= 1;
     const now = performance.now(); this.lastKey = now;
+    if (this.intro && (dels || cur.slice(p).length)) { this.endIntro(now); dels = 0; }
     for (let i = 0; i < dels; i++) this.wither(now);
     for (const ch of cur.slice(p)) {
       if (ch === S || '´`^¨~ˆ˜˝¸'.includes(ch)) continue;
@@ -769,10 +822,12 @@ class Garden {
       return;
     }
     if (e.target && e.target.tagName === 'BUTTON' && (e.key === 'Enter' || e.key === ' ')) return;
+    if (e.target && e.target.tagName === 'SELECT') return;
     // accent en attente (´ ^ ¨…) : on laisse le système composer la lettre, elle arrive par le champ
     if (e.key === 'Dead') { this.deadKey = true; return; }
     if (e.isComposing || this.composing) return;
     const now = performance.now();
+    if (this.intro && (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Enter')) { e.preventDefault(); this.mark(); this.endIntro(now); if (e.key.length === 1 && e.key !== ' ') this.add(e.key, now); return; }
     if (e.key === 'Backspace') { e.preventDefault(); this.mark(); this.wither(now); return; }
     if (e.key === 'Enter') { e.preventDefault(); this.mark(); this.letters = []; this.refresh(now); return; }
     if (e.key.length !== 1) return;
