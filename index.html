@@ -191,6 +191,7 @@ class Garden {
     this.palette = 0; this.duo = false;
     try { const sv = JSON.parse(localStorage.getItem('tg-pal') || '{}'); if (this.PALS[sv.p]) this.palette = sv.p; this.duo = !!sv.d; } catch (e) { /* stockage indisponible */ }
     this.buildPalette(); this.applyPalette(); this.buildMotifs();
+    this.loadFall();
 
     window.addEventListener('resize', () => this.resize());
     window.addEventListener('keydown', e => this.key(e));
@@ -266,12 +267,13 @@ class Garden {
   MOTIFS = [
     ['fleurs', 'rose lavande tulipe tournesol marguerite coquelicot sakura pivoine lys orchidee lotus muguet'],
     ['arbres et plantes', 'chene sapin palmier bambou cactus champignon'],
+    ['à manger', 'croissant donut gaufre pizza burger frites sushi bonbon chocolat'],
     ['fruits', 'pomme cerise fraise framboise myrtille poire peche abricot prune orange citron banane raisin ananas mangue kiwi pasteque melon grenade avocat'],
     ['ciel et nature', 'etoile lune nuage neige feu amour arcenciel papillon'],
     ['animaux', 'chat chien licorne dragon'],
-    ['objets', 'avion voiture bateau velo fusee maison couronne parapluie ballon livre cadeau robot fantome']
+    ['objets', 'avion voiture bateau velo fusee montgolfiere maison chateau phare couronne parapluie ballon livre cadeau guitare robot fantome']
   ];
-  LABELS = { peche: 'pêche', pasteque: 'pastèque', orchidee: 'orchidée', chene: 'chêne', etoile: 'étoile', amour: 'cœur', arcenciel: 'arc-en-ciel', fusee: 'fusée', fantome: 'fantôme', velo: 'vélo', muguet: 'muguet', lys: 'lys' };
+  LABELS = { chateau: 'château', montgolfiere: 'montgolfière', peche: 'pêche', pasteque: 'pastèque', orchidee: 'orchidée', chene: 'chêne', etoile: 'étoile', amour: 'cœur', arcenciel: 'arc-en-ciel', fusee: 'fusée', fantome: 'fantôme', velo: 'vélo', muguet: 'muguet', lys: 'lys' };
   buildMotifs() {
     const sel = document.getElementById('motif');
     sel.innerHTML = '<option value="">motif : libre</option>' + this.MOTIFS.map(([g, ids]) => `<optgroup label="${g}">` +
@@ -303,6 +305,9 @@ class Garden {
   setForce(id) {
     this.force = this.CATS[id] ? id : null;
     try { localStorage.setItem('tg-motif', this.force || ''); } catch (e) { /* stockage indisponible */ }
+    this.regrow();
+  }
+  regrow() {
     const now = performance.now(), runs = []; let cur = [];
     for (const l of this.letters) { if (l.dead) continue; if (l.ch === ' ') { if (cur.length) runs.push(cur); cur = []; } else cur.push(l); }
     // les mots déjà écrits repoussent dans le nouveau motif, le dernier est relu comme à chaque frappe
@@ -322,29 +327,47 @@ class Garden {
         bad.g.forEach(w => this.gross.add(this.bk(w))); bad.h.forEach(w => this.hateSet.add(this.bk(w)));
       } catch (e) { /* liste absente : aucun mot filtré */ }
     }
-    if (L && L.top) for (const [cat, str] of Object.entries(L.top)) str.split(' ').forEach(w => { if (w) this.dict.set(w, cat); });
+    // mots venus du seul lexique : WordNet (mots.js) passera devant eux
+    this.lexw = new Set(this.dict.keys());
+    if (L && L.top) for (const [cat, str] of Object.entries(L.top)) str.split(' ').forEach(w => { if (w) this.put(w, cat); });
     // objets (objets.js) : chacun a son dessin, ou rejoint une catégorie qui en a un ; leurs noms priment sur le lexique
     this.obj = new Map();
     for (const [id, o] of Object.entries(this.OBJ || {})) {
       if (!o.to) { this.CATS[id] = { rp: [0.6, 0.3], ...o, name: id }; if (o.c) this.FC[o.fl] = o.c; }
-      if (o.n) o.n.split(' ').forEach(w => { const n = this.norm(w); if (n) this.dict.set(n, id); });
+      if (o.n) o.n.split(' ').forEach(w => { const n = this.norm(w); if (n) this.put(n, id); });
       o.w.split(' ').forEach(w => { const n = this.norm(w); if (n && !this.obj.has(n)) this.obj.set(n, o.to || id); });
     }
+    // dessins compacts (dessins.js) et leurs noms en plusieurs langues
+    for (const [id, d] of Object.entries(this.DRAW || {})) { this.CATS[id] = { rp: [0.6, 0.3], fl: id, stem: d[2], name: id }; this.FC[id] = [d[0], d[1]]; }
+    for (const [id, ws] of Object.entries(this.DRAWN || {})) if (this.CATS[id]) ws.split(' ').forEach(w => { if (w) this.put(w, id); });
     // espèces de la flore (flore.js) : chacune devient sa propre catégorie
     for (const [id, sp] of Object.entries(this.SP || {})) {
       this.CATS[id] = { rp: [0.6, 0.3], ...sp.k, name: id, fl: sp.k.fl !== undefined ? sp.k.fl : id };
-      sp.w.split(' ').forEach(w => { const n = this.norm(w); if (n) this.dict.set(n, id); });
+      sp.w.split(' ').forEach(w => { const n = this.norm(w); if (n) this.put(n, id); });
     }
     // références pop culture et expressions (culture.js)
     for (const [id, k] of Object.entries(this.POP || {})) {
       this.CATS[id] = { rp: [0.7, 0.25], ...k, name: id };
-      k.w.split(' ').forEach(w => { const n = this.norm(w); if (n) this.dict.set(n, id); });
+      k.w.split(' ').forEach(w => { const n = this.norm(w); if (n) this.put(n, id); });
     }
     this.phr = new Map(Object.entries(this.PHR || {}).map(([k, v]) => [this.norm(k), v]));
     this.names = { f: new Set((this.NAMES || {}).f ? this.NAMES.f.split(' ') : []), m: new Set((this.NAMES || {}).m ? this.NAMES.m.split(' ') : []) };
-    for (const [cat, ws] of Object.entries(this.OVER)) ws.forEach(w => this.dict.set(this.norm(w), cat));
+    for (const [cat, ws] of Object.entries(this.OVER)) ws.forEach(w => this.put(this.norm(w), cat));
     for (const [hex, ws] of Object.entries(this.COLORS)) ws.forEach(w => this.cols.set(this.norm(w), hex));
     for (const [n, ws] of Object.entries(this.NUMS)) ws.forEach(w => this.nums.set(this.norm(w), +n));
+  }
+  put(w, c) { this.dict.set(w, c); this.lexw.delete(w); }
+  // tout le vocabulaire de WordNet (mots.js), chargé après l'arrivée pour ne pas la ralentir
+  loadFall() {
+    const sc = document.createElement('script'); sc.src = 'mots.js'; sc.async = true;
+    sc.onload = () => {
+      const f = new Map();
+      for (const [c, ws] of Object.entries(window.MOTS || {})) if (this.CATS[c]) for (const w of ws.split(' ')) if (w && !f.has(w)) f.set(w, c);
+      this.fall = f; window.MOTS = null;
+      // ce qui a été écrit pendant le chargement repousse avec ses vrais dessins
+      if (this.letters.some(l => !l.dead && l.ch !== ' ')) this.regrow();
+    };
+    document.head.appendChild(sc);
   }
   isCjk(ch) { return /[぀-ヿ㐀-鿿豈-﫿]/.test(ch); }
   isRtl(ch) { return /[؀-ۿ]/.test(ch); }
@@ -386,6 +409,9 @@ class Garden {
     const col = this.cols.get(w); if (col) return this.colKind(col);
     const c = this.find(w), k = c ? this.CATS[c] : null;
     // un objet précis qui n'a qu'un dessin de famille (ou rien) prend son propre dessin
+    // WordNet : quand le jardin ne sait rien, ou seulement une famille vague, ou ce que dit le lexique seul
+    const F = this.fall, fw = F && (F.has(w) ? w : w.length > 3 && F.has(w.replace(/s$/, '')) ? w.replace(/s$/, '') : null);
+    if (fw && (!k || this.GENERIC.includes(c) || this.lexw.has(w))) return this.CATS[F.get(fw)];
     const ow = this.obj.has(w) ? w : w.length > 3 && this.obj.has(w.replace(/s$/, '')) ? w.replace(/s$/, '') : null;
     if (ow && (!k || this.GENERIC.includes(c))) return this.CATS[this.obj.get(ow)];
     return k || null;
@@ -1950,6 +1976,7 @@ class Garden {
 <script src="flore.js"></script>
 <script src="culture.js"></script>
 <script src="objets.js"></script>
+<script src="dessins.js"></script>
 <script>new Garden();</script>
 </body>
 </html>
