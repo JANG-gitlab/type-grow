@@ -4,6 +4,20 @@ const G = Garden.prototype;
 
 // id : { fl : dessin, stem : tige, c : [couleur principale, couleur d'accent], n : ses noms (priment sur le lexique), w : mots }  ou  { to : catégorie existante, w : mots }
 G.OBJ = {
+  fraise: { fl: 'strawberry', stem: '#4FAE4F', c: ['#E8283A', '#FFE066'], n: 'fraise fraises strawberry strawberries いちご イチゴ 苺 草莓 فراولة', w: '' },
+  poire: { fl: 'pear', stem: '#7A5230', c: ['#C9D94A', '#F2F7B0'], n: 'poire poires pear pears なし 梨 洋梨 梨子 كمثرى اجاص', w: '' },
+  peche: { fl: 'peach', stem: '#4FAE4F', c: ['#FF9F80', '#FF6B5A'], n: 'peche peches peach peaches もも 桃 桃子 خوخ دراق', w: '' },
+  ananas: { fl: 'pineapple', stem: '#3FAE5A', c: ['#F2B233', '#B8860B'], n: 'ananas pineapple pineapples パイナップル 菠萝 凤梨 اناناس', w: '' },
+  pasteque: { fl: 'watermelon', stem: '#3FAE5A', c: ['#FF4D5E', '#1A1A1A'], n: 'pasteque pasteques watermelon watermelons すいか スイカ 西瓜 بطيخ', w: '' },
+  kiwi: { fl: 'kiwi', stem: '#7A5230', c: ['#7CC04A', '#F4F1D0'], n: 'kiwi kiwis キウイ 猕猴桃 奇异果 كيوي', w: '' },
+  prune: { fl: 'plum', stem: '#7A5230', c: ['#7B3FA0', '#C9A8E8'], n: 'prune prunes plum plums すもも 李子 李 برقوق', w: '' },
+  myrtille: { fl: 'blueberry', stem: '#4FAE4F', c: ['#3B4FB8', '#9FB4FF'], n: 'myrtille myrtilles blueberry blueberries ブルーベリー 蓝莓 عنبية', w: '' },
+  framboise: { fl: 'raspberry', stem: '#4FAE4F', c: ['#E0306A', '#FF9DB8'], n: 'framboise framboises raspberry raspberries ラズベリー 树莓 覆盆子', w: '' },
+  mangue: { fl: 'mango', stem: '#4FAE4F', c: ['#FFB627', '#FF6B3D'], n: 'mangue mangues mango mangoes マンゴー 芒果 مانجو مانجا', w: '' },
+  abricot: { fl: 'apricot', stem: '#4FAE4F', c: ['#FFA040', '#FFD08A'], n: 'abricot abricots apricot apricots あんず アンズ 杏 杏子 مشمش', w: '' },
+  grenade: { fl: 'pomegranate', stem: '#7A5230', c: ['#C8243A', '#FF9DA8'], n: 'grenade grenades pomegranate pomegranates ざくろ 石榴 柘榴 رمان', w: '' },
+  melon: { fl: 'melon', stem: '#4FAE4F', c: ['#FFA45B', '#9BCB6A'], n: 'melon melons cantaloup cantaloupe メロン 甜瓜 哈密瓜 شمام', w: '' },
+  avocat: { fl: 'avocado', stem: '#4FAE4F', c: ['#3F7A2E', '#C8E07A'], n: 'avocat avocats avocado avocados アボカド 牛油果 鳄梨 افوكادو', w: '' },
   livre: { fl: 'book', stem: '#8A6236', c: ['#3257FF', '#7B8CFF'], n: 'livre livres cahier bouquin roman book books notebook novel', w: 'book livre كتاب ぶっく 书 书籍 単行本 図書 巻 教科書 書 書物 書籍 書誌 本 著 著作 著書 books cahier calepin notebook のーと 備忘録 帳面 手帖 手帳 本子 笔记本 簿子 通帳 bibliotheque librairie library مكتبة らいぶらり らいぶらりー 图书馆 書房 bookmark favori signet 书签 栞 bookmarks address adresse reference あどれす りふぁれんす れふぁれんす 参照 番地' },
   lettre: { fl: 'letter', stem: '#8A93A3', c: ['#F2E6D0', '#C9B48A'], n: 'lettre courrier enveloppe letter envelope mail', w: 'courrier mail بريد めいる めーる 邮件 郵便 mailbox ぽすと めーるぼっくす 信箱 邮箱 郵便受け courriel email mel enregistrement record registre تسجيل سجل 記録 message signal رسالة めっせーじ 信息 短信 讯息 音信 messages' },
   papier: { fl: 'paper', stem: '#8A93A3', c: ['#7B8CFF', '#C9D2FF'], n: 'papier feuille page document paper sheet', w: 'fichier file ملف でーたふぁいる ふぁいる 文件 files article مقال مقالة موضوع 文章 記事 論文 論考 note notes ملاحظة ملحوظة めも 備忘録 覚 覚え 覚え書き 覚書 actualite intelligence news tidings word اخبار خبر نبا にゅーす にゅーず 便り 報 報道 情報 情报 报导 新報 新闻 沙汰 消息 知らせ 音信 音沙汰 quittance receipt recepisse reception recu استقبال استلام تسلم 収受 受け入れ 受け取り 受入れ 受取 受取り 受容 受領 領収 account bill compte facture facturer invoice حساب فاتورة いんぼいす 勘定 愛想 書き出し 書付 書出し 送り状 etude rapport report study تقرير دراسة りぽーと れぽーと 报告 紀要 clipboard 剪贴板 checklist checkup medical 人間どっく 検診 attestation certificat certificate certification confirmation credential credentials feuille temoignage valeur お墨付き 保証書 免状 免許 証書 証票 证书 鑑札 autorisation debit licence license permettre permis permit らいせんす 公認 执照 特许 認可 许可 许可证 book livre reserver scenario script しなりお すくりぷと 原作 台本 本 脚本 calibre gabarit guide mode modele patron reglette template てんぷれーと 指針 鋳型 billet ticket تذكرة ちけっと 切符 券 机票 票 车票' },
@@ -95,7 +109,6 @@ G.OBJ = {
   pomme: { to: 'pomme', w: 'apple pomme تفاح りんご 林檎 苹果' },
   cerise: { to: 'cerise', w: 'cerise cerisier cherry prunus' },
   citron: { to: 'citron', w: 'chiotte citron citronnier lemon れもん 柠檬 檸檬' },
-  fruit: { to: 'fruit', w: 'melon めろん 瓜 avocado avocat あぼかど' },
   legume: { to: 'legume', w: 'carotte carrot にんじん 人参 红萝卜 胡萝卜 pepper poivre poivrier こしょう ぶらっくぺっぱー ぺっぱー 胡椒 黑胡椒 salad salade سلطة さらだ 沙拉 色拉' },
   pain: { to: 'pain', w: 'bread pain خبز ぱん ぶれっど 面包 食ぱん baguette ばげっと' },
   pizza: { to: 'pizza', w: 'pizza ぴざ ぴっつぁ' },
@@ -146,14 +159,12 @@ Object.assign(G, {
     B.fill(K.poly([[-0.95, -0.48], [0, -0.32], [0.95, -0.48], [0.95, 0.58], [0, 0.72], [-0.95, 0.58]]), M);
     for (const sd of [-1, 1]) {
       B.fill(K.poly([[sd * 0.85, -0.56], [sd * 0.03, -0.42], [sd * 0.03, 0.58], [sd * 0.85, 0.46]]), WHITE);
-      for (let i = 0; i < 3; i++) B.stroke([K.T(sd * 0.7, -0.3 + i * 0.24), K.T(sd * 0.18, -0.2 + i * 0.24)], L, K.lw * 1.2);
+      for (let i = 0; i < 2; i++) B.stroke([K.T(sd * 0.7, -0.22 + i * 0.32), K.T(sd * 0.18, -0.12 + i * 0.32)], L, K.lw * 1.4);
     }
-    B.stroke([K.T(0, -0.42), K.T(0, 0.62)], M, K.lw * 1.4);
   },
   f_letter(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
     B.fill(K.poly([[-0.9, -0.55], [0.9, -0.55], [0.9, 0.58], [-0.9, 0.58]]), M);
-    B.stroke([K.T(-0.9, 0.58), K.T(-0.2, 0), K.T(-0.2, 0)], L, K.lw * 1.2); B.stroke([K.T(0.9, 0.58), K.T(0.2, 0), K.T(0.2, 0)], L, K.lw * 1.2);
     B.fill(K.poly([[-0.9, -0.55], [0.9, -0.55], [0, 0.12]]), L);
     B.fill(K.ring(0, 0.06, 0.12, 0.12, 10), '#E0262B');
   },
@@ -161,24 +172,21 @@ Object.assign(G, {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
     B.fill(K.poly([[-0.6, -0.88], [0.32, -0.88], [0.62, -0.58], [0.62, 0.88], [-0.6, 0.88]]), WHITE);
     B.fill(K.poly([[0.32, -0.88], [0.32, -0.58], [0.62, -0.58]]), L);
-    B.stroke([K.T(-0.42, -0.6), K.T(0.1, -0.6)], M, K.lw * 1.8);
-    for (let i = 0; i < 5; i++) B.stroke([K.T(-0.42, -0.28 + i * 0.24), K.T(i === 4 ? 0.05 : 0.42, -0.28 + i * 0.24)], L, K.lw * 1.2);
+    for (let i = 0; i < 3; i++) B.stroke([K.T(-0.4, -0.4 + i * 0.36), K.T(i === 2 ? 0.05 : 0.4, -0.4 + i * 0.36)], M, K.lw * 1.6);
   },
   f_pencil(B, cx, cy, R, rot, e, a) {
     const s = this.sp(a); if (s <= 0.001) return; const K = this.kit(cx, cy, R, rot * 0.3 + 0.6, s * 1.05), M = this.cc.red, L = this.cc.line;
     B.fill(K.poly([[-0.2, -0.95], [0.2, -0.95], [0.2, -0.75], [-0.2, -0.75]]), L);
     B.fill(K.poly([[-0.2, -0.75], [0.2, -0.75], [0.2, -0.6], [-0.2, -0.6]]), METAL);
     B.fill(K.poly([[-0.2, -0.6], [0.2, -0.6], [0.2, 0.5], [-0.2, 0.5]]), M);
-    B.stroke([K.T(0, -0.6), K.T(0, 0.5)], this.mix(M, INK, 0.25), K.lw);
     B.fill(K.poly([[-0.2, 0.5], [0.2, 0.5], [0, 0.98]]), '#F2D3A0');
-    B.fill(K.poly([[-0.07, 0.82], [0.07, 0.82], [0, 0.98]]), INK);
   },
   f_brush(B, cx, cy, R, rot, e, a) {
     const s = this.sp(a); if (s <= 0.001) return; const K = this.kit(cx, cy, R, rot * 0.3 - 0.5, s * 1.05), M = this.cc.red, L = this.cc.line;
     B.stroke([K.T(0, -0.95), K.T(0, 0.05)], WOOD, K.lw * 3.4);
     B.fill(K.poly([[-0.14, 0.02], [0.14, 0.02], [0.16, 0.3], [-0.16, 0.3]]), METAL);
     B.fill(pts(K, [[-0.16, 0.3], [0.16, 0.3], [0.2, 0.6], [0, 1.0], [0, 1.0], [-0.2, 0.6]]), M);
-    B.fill(K.ell(0.42, 0.55, 0.14, 0.18, 0, 10), L); B.fill(K.ring(0.55, 0.85, 0.07, 0.07, 8), M);
+    B.fill(K.ell(0.42, 0.62, 0.15, 0.19, 0, 10), L);
   },
   f_scissors(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
@@ -193,7 +201,7 @@ Object.assign(G, {
     const top = arc(K, 0, -0.05, 0.95, 0.78, Math.PI, Math.PI * 2, 16), bot = [];
     for (let i = 5; i >= 0; i--) { const x = -0.95 + i * 0.38; bot.push(K.T(x, -0.05), K.T(x, -0.05)); if (i) bot.push(K.T(x - 0.19, -0.18)); }
     B.fill(top.concat(bot), M);
-    for (const x of [-0.57, -0.19, 0.19, 0.57]) B.stroke([K.T(0, -0.8), K.T(x * 0.7, -0.4), K.T(x, -0.07)], L, K.lw);
+    for (const x of [-0.38, 0.38]) B.stroke([K.T(0, -0.8), K.T(x * 0.7, -0.4), K.T(x, -0.07)], L, K.lw);
     B.stroke([K.T(0, -0.8), K.T(0, -0.98)], INK, K.lw * 1.4);
     B.stroke([K.T(0, -0.1), K.T(0, 0.72), K.T(0.02, 0.92), K.T(0.18, 0.95), K.T(0.26, 0.8)], INK, K.lw * 1.6);
   },
@@ -203,9 +211,6 @@ Object.assign(G, {
     B.fill(pts(K, [[0, -0.88], [0.55, -0.62], [0.58, -0.22], [0.3, 0.12], [0.24, 0.32], [-0.24, 0.32], [-0.3, 0.12], [-0.58, -0.22], [-0.55, -0.62]]), M);
     B.stroke([K.T(-0.14, 0.28), K.T(-0.14, -0.2), K.T(-0.07, -0.3), K.T(0, -0.2), K.T(0.07, -0.3), K.T(0.14, -0.2), K.T(0.14, 0.28)], L, K.lw * 1.1);
     B.fill(K.poly([[-0.25, 0.32], [0.25, 0.32], [0.22, 0.66], [-0.22, 0.66]]), METAL);
-    for (const y of [0.43, 0.55]) B.stroke([K.T(-0.23, y), K.T(0.23, y)], '#7F8A99', K.lw);
-    B.fill(K.ell(0, 0.72, 0.1, 0.07, 0, 8), INK);
-    B.stroke([K.T(-0.38, -0.5), K.T(-0.3, -0.62)], WHITE, K.lw * 1.6);
   },
   f_bell(B, cx, cy, R, rot, e, a) {
     const sw = Math.sin(this._now / 300 + e.ph1) * 0.25, K = go(this, cx, cy, R, rot + sw / 0.3, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
@@ -213,15 +218,13 @@ Object.assign(G, {
     B.fill(K.ring(sw * -0.3, 0.6, 0.14, 0.14, 10), INK);
     B.fill(pts(K, [[-0.16, -0.74], [0.16, -0.74], [0.46, -0.48], [0.52, 0.18], [0.84, 0.48], [0.84, 0.48], [-0.84, 0.48], [-0.84, 0.48], [-0.52, 0.18], [-0.46, -0.48]]), M);
     B.stroke([K.T(-0.82, 0.46), K.T(0.82, 0.46)], L, K.lw * 2);
-    B.stroke([K.T(-0.28, -0.42), K.T(-0.32, 0.05)], this.rgba(WHITE, 0.6), K.lw * 1.4);
   },
   f_gift(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
     B.fill(K.poly([[-0.72, -0.24], [0.72, -0.24], [0.72, 0.82], [-0.72, 0.82]]), M);
     B.fill(K.poly([[-0.84, -0.5], [0.84, -0.5], [0.84, -0.2], [-0.84, -0.2]]), this.mix(M, WHITE, 0.2));
     B.fill(K.poly([[-0.12, -0.5], [0.12, -0.5], [0.12, 0.82], [-0.12, 0.82]]), L);
-    for (const sd of [-1, 1]) { B.fill(K.ell(sd * 0.27, -0.68, 0.26, 0.15, sd * 0.45, 12), L); B.fill(K.ell(sd * 0.27, -0.68, 0.12, 0.06, sd * 0.45, 8), this.mix(L, INK, 0.25)); }
-    B.fill(K.ring(0, -0.56, 0.11, 0.11, 8), L);
+    for (const sd of [-1, 1]) B.fill(K.ell(sd * 0.27, -0.68, 0.26, 0.15, sd * 0.45, 12), L);
   },
   f_balloon(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot + Math.sin(this._now / 1100 + e.ph1) * 0.35, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
@@ -247,23 +250,20 @@ Object.assign(G, {
     B.fill(pts(K, [[-0.08, 0.38], [0.08, 0.38], [0, 0.4 + 0.32 * f], [0, 0.4 + 0.32 * f]]), '#FFE680');
     for (const sd of [-1, 1]) B.fill(K.poly([[sd * 0.28, -0.02], [sd * 0.62, 0.52], [sd * 0.62, 0.52], [sd * 0.28, 0.4]]), L);
     B.fill(pts(K, [[0, -1.0], [0, -1.0], [0.28, -0.6], [0.33, 0.1], [0.28, 0.42], [-0.28, 0.42], [-0.33, 0.1], [-0.28, -0.6]]), M);
-    B.fill(K.ring(0, -0.28, 0.17, 0.17, 12), INK); B.fill(K.ring(0, -0.28, 0.11, 0.11, 10), '#7CC6FF');
-    B.stroke([K.T(0, 0.12), K.T(0, 0.38)], L, K.lw * 1.6);
+    B.fill(K.ring(0, -0.28, 0.15, 0.15, 12), '#7CC6FF');
   },
   f_ufo(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot + Math.sin(this._now / 700 + e.ph1) * 0.25, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
     B.fill(K.poly([[-0.3, 0.18], [0.3, 0.18], [0.62, 1.0], [-0.62, 1.0]]), this.rgba(L, 0.25 + Math.sin(this._now / 300) * 0.08));
     B.fill(K.ell(0, -0.18, 0.36, 0.34, 0, 16), this.rgba('#BFE9FF', 0.9));
-    B.fill(K.ell(-0.1, -0.3, 0.06, 0.1, 0.5, 8), WHITE);
     B.fill(K.ell(0, 0.05, 0.95, 0.26, 0, 22), M);
-    for (let i = 0; i < 5; i++) B.fill(K.ring(-0.6 + i * 0.3, 0.08, 0.06, 0.06, 6), Math.floor(this._now / 250 + i) % 2 ? L : WHITE);
+    for (let i = 0; i < 3; i++) B.fill(K.ring(-0.45 + i * 0.45, 0.08, 0.07, 0.07, 6), Math.floor(this._now / 250 + i) % 2 ? L : WHITE);
   },
   f_crown(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
     B.fill(K.poly([[-0.8, 0.5], [-0.88, -0.42], [-0.42, -0.02], [0, -0.62], [0.42, -0.02], [0.88, -0.42], [0.8, 0.5]]), M);
-    B.fill(K.poly([[-0.8, 0.28], [0.8, 0.28], [0.8, 0.5], [-0.8, 0.5]]), this.mix(M, INK, 0.18));
     for (const [x, y] of [[-0.88, -0.48], [0, -0.68], [0.88, -0.48]]) B.fill(K.ring(x, y, 0.1, 0.1, 8), L);
-    for (const x of [-0.45, 0, 0.45]) B.fill(K.ring(x, 0.39, 0.08, 0.08, 8), x ? '#3B82F6' : '#E0262B');
+    B.fill(K.ring(0, 0.25, 0.11, 0.11, 8), '#E0262B');
   },
   f_trophy(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
@@ -271,7 +271,6 @@ Object.assign(G, {
     B.fill(pts(K, [[-0.62, -0.78], [-0.62, -0.78], [0.62, -0.78], [0.62, -0.78], [0.52, -0.22], [0.2, 0.12], [-0.2, 0.12], [-0.52, -0.22]]), M);
     B.fill(K.poly([[-0.09, 0.1], [0.09, 0.1], [0.12, 0.5], [-0.12, 0.5]]), M);
     B.fill(K.poly([[-0.45, 0.5], [0.45, 0.5], [0.45, 0.8], [-0.45, 0.8]]), L);
-    B.stroke([K.T(-0.38, -0.62), K.T(-0.32, -0.3)], this.rgba(WHITE, 0.7), K.lw * 1.6);
   },
   f_anchor(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot + Math.sin(this._now / 1000 + e.ph1) * 0.2, a); if (!K) return; const M = this.cc.red;
@@ -287,7 +286,6 @@ Object.assign(G, {
       B.fill(K.ell(sd * 0.46, 0.02, 0.34, 0.3, 0, 16), this.rgba(L, 0.85));
       B.stroke(K.ell(sd * 0.46, 0.02, 0.34, 0.3, 0, 16).concat([K.T(sd * 0.46 + 0.34, 0.02)]), M, K.lw * 2.4);
       B.stroke([K.T(sd * 0.8, -0.06), K.T(sd * 0.96, -0.3)], M, K.lw * 2);
-      B.stroke([K.T(sd * 0.32 - 0.1, -0.1), K.T(sd * 0.32 - 0.02, -0.18)], WHITE, K.lw * 1.4);
     }
     B.stroke([K.T(-0.13, -0.04), K.T(0, -0.12), K.T(0.13, -0.04)], M, K.lw * 2);
   },
@@ -296,7 +294,6 @@ Object.assign(G, {
     B.fill(K.ell(0, 0.42, 0.95, 0.2, 0, 20), M);
     B.fill(pts(K, [[-0.52, 0.42], [-0.52, 0.42], [-0.46, -0.62], [-0.46, -0.62], [0.46, -0.62], [0.46, -0.62], [0.52, 0.42], [0.52, 0.42]]), M);
     B.fill(K.poly([[-0.5, 0.08], [0.5, 0.08], [0.51, 0.3], [-0.51, 0.3]]), L);
-    B.stroke([K.T(-0.32, -0.5), K.T(-0.34, -0.05)], this.rgba(WHITE, 0.25), K.lw * 2);
   },
   f_shirt(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot + Math.sin(this._now / 800 + e.ph1) * 0.2, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
@@ -308,8 +305,7 @@ Object.assign(G, {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
     B.fill(pts(K, [[-0.86, 0.4], [-0.86, -0.26], [-0.6, -0.3], [-0.3, -0.28], [-0.2, -0.6], [0.16, -0.6], [0.22, -0.2], [0.75, 0.0], [0.94, 0.32], [0.94, 0.4]]), M);
     B.fill(K.poly([[-0.9, 0.34], [0.96, 0.34], [0.96, 0.56], [-0.9, 0.56]]), WHITE);
-    for (let i = 0; i < 3; i++) B.stroke([K.T(-0.12 + i * 0.12, -0.42 + i * 0.12), K.T(0.12 + i * 0.12, -0.36 + i * 0.12)], L, K.lw * 1.6);
-    B.stroke([K.T(-0.7, 0.12), K.T(-0.2, 0.22), K.T(0.4, 0.1)], L, K.lw * 2);
+    for (let i = 0; i < 2; i++) B.stroke([K.T(-0.06 + i * 0.16, -0.42 + i * 0.12), K.T(0.12 + i * 0.12, -0.36 + i * 0.12)], L, K.lw * 1.6);
   },
   f_chair(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
@@ -325,12 +321,11 @@ Object.assign(G, {
     B.fill(K.poly([[-0.74, 0.0], [0.8, 0.0], [0.8, 0.4], [-0.74, 0.4]]), WHITE);
     B.fill(K.ell(-0.5, -0.1, 0.22, 0.13, 0, 12), L);
     B.fill(pts(K, [[-0.28, -0.08], [0.82, -0.12], [0.84, 0.42], [-0.3, 0.42]]), M);
-    B.stroke([K.T(-0.1, 0.05), K.T(0.6, 0.02)], this.rgba(WHITE, 0.45), K.lw * 1.2);
   },
   f_door(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a, 1, 0.15); if (!K) return; const M = this.cc.red, L = this.cc.line;
     B.fill(pts(K, [[-0.55, 0.95], [-0.55, 0.95], [-0.55, -0.6], [-0.4, -0.86], [0, -0.96], [0.4, -0.86], [0.55, -0.6], [0.55, 0.95], [0.55, 0.95]]), M);
-    for (const [y0, y1] of [[-0.6, 0.0], [0.15, 0.78]]) B.stroke(K.poly([[-0.36, y0], [0.36, y0], [0.36, y1], [-0.36, y1], [-0.36, y0]]), L, K.lw * 1.2);
+    for (const [y0, y1] of [[-0.55, 0.0]]) B.stroke(K.poly([[-0.36, y0], [0.36, y0], [0.36, y1], [-0.36, y1], [-0.36, y0]]), L, K.lw * 1.2);
     B.fill(K.ring(0.38, 0.08, 0.07, 0.07, 8), '#FFC21A');
   },
   f_bottle(B, cx, cy, R, rot, e, a) {
@@ -338,15 +333,13 @@ Object.assign(G, {
     B.fill(pts(K, [[-0.13, -0.86], [0.13, -0.86], [0.14, -0.48], [0.38, -0.22], [0.38, 0.88], [0.38, 0.88], [-0.38, 0.88], [-0.38, 0.88], [-0.38, -0.22], [-0.14, -0.48]]), M);
     B.fill(K.poly([[-0.16, -1.0], [0.16, -1.0], [0.16, -0.84], [-0.16, -0.84]]), INK);
     B.fill(K.poly([[-0.38, 0.06], [0.38, 0.06], [0.38, 0.48], [-0.38, 0.48]]), L);
-    B.stroke([K.T(-0.24, -0.15), K.T(-0.24, -0.02)], this.rgba(WHITE, 0.6), K.lw * 1.8);
   },
   f_glass(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
     B.fill(K.poly([[-0.52, -0.72], [0.52, -0.72], [0.4, 0.78], [-0.4, 0.78]]), this.rgba('#FFFFFF', 0.28));
     B.fill(K.poly([[-0.47, -0.32], [0.47, -0.32], [0.4, 0.78], [-0.4, 0.78]]), M);
     B.stroke([K.T(0.25, -0.98), K.T(0.12, -0.2)], L, K.lw * 2.4);
-    for (const [x, y, r] of [[-0.18, 0.1, 0.05], [0.12, 0.4, 0.04], [-0.05, 0.55, 0.035]]) B.fill(K.ring(x, y + Math.sin(this._now / 400 + x * 9) * 0.04, r, r, 6), this.rgba(WHITE, 0.7));
-    B.stroke([K.T(-0.52, -0.72), K.T(0.52, -0.72)], this.rgba(WHITE, 0.7), K.lw * 1.2);
+    for (const [x, y, r] of [[-0.18, 0.1, 0.06], [0.12, 0.42, 0.05]]) B.fill(K.ring(x, y + Math.sin(this._now / 400 + x * 9) * 0.04, r, r, 6), this.rgba(WHITE, 0.7));
   },
   f_headphones(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
@@ -365,13 +358,11 @@ Object.assign(G, {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
     const sh = k => pts(K, [[-0.75 * k, -0.78 * k], [-0.75 * k, -0.78 * k], [0, -0.9 * k], [0.75 * k, -0.78 * k], [0.75 * k, -0.78 * k], [0.72 * k, 0.05 * k], [0.36 * k, 0.6 * k], [0, 0.92 * k], [0, 0.92 * k], [-0.36 * k, 0.6 * k], [-0.72 * k, 0.05 * k]]);
     B.fill(sh(1), M); B.fill(sh(0.72), L);
-    B.fill(K.poly([[-0.12, -0.62], [0.12, -0.62], [0.12, 0.62], [-0.12, 0.62]]), M);
-    B.fill(K.poly([[-0.52, -0.22], [0.52, -0.22], [0.52, 0.02], [-0.52, 0.02]]), M);
+    B.fill(K.poly([[-0.13, -0.6], [0.13, -0.6], [0.13, 0.6], [-0.13, 0.6]]), M);
   },
   f_sword(B, cx, cy, R, rot, e, a) {
     const s = this.sp(a); if (s <= 0.001) return; const K = this.kit(cx, cy, R, rot * 0.3 + 0.5, s * 1.08), M = this.cc.red, L = this.cc.line;
     B.fill(K.poly([[-0.1, 0.24], [-0.1, -0.72], [0, -0.98], [0.1, -0.72], [0.1, 0.24]]), '#DDE2E8');
-    B.stroke([K.T(0, -0.72), K.T(0, 0.2)], '#9AA5B1', K.lw);
     B.fill(K.poly([[-0.44, 0.22], [0.44, 0.22], [0.44, 0.36], [-0.44, 0.36]]), M);
     B.fill(K.poly([[-0.07, 0.36], [0.07, 0.36], [0.07, 0.78], [-0.07, 0.78]]), L);
     B.fill(K.ring(0, 0.84, 0.1, 0.1, 10), M);
@@ -381,14 +372,12 @@ Object.assign(G, {
     B.fill(K.poly([[-0.08, -0.4], [0.08, -0.4], [0.09, 0.95], [-0.09, 0.95]]), WOOD);
     B.fill(K.poly([[-0.62, -0.76], [0.38, -0.76], [0.38, -0.36], [-0.62, -0.36]]), M);
     B.fill(K.poly([[0.38, -0.74], [0.78, -0.92], [0.66, -0.58], [0.38, -0.44]]), M);
-    B.stroke([K.T(-0.62, -0.7), K.T(-0.62, -0.42)], this.mix(M, INK, 0.3), K.lw * 1.4);
   },
   f_shovel(B, cx, cy, R, rot, e, a) {
     const s = this.sp(a); if (s <= 0.001) return; const K = this.kit(cx, cy, R, rot * 0.3 + 0.35, s * 1.05), M = this.cc.red;
     B.stroke([K.T(0, -0.92), K.T(0, 0.18)], WOOD, K.lw * 3);
     B.stroke([K.T(-0.2, -0.95), K.T(0.2, -0.95)], WOOD, K.lw * 3);
     B.fill(pts(K, [[-0.36, 0.1], [-0.36, 0.1], [0.36, 0.1], [0.36, 0.1], [0.36, 0.55], [0, 0.98], [0, 0.98], [-0.36, 0.55]]), M);
-    B.stroke([K.T(0, 0.18), K.T(0, 0.6)], this.mix(M, INK, 0.25), K.lw * 1.2);
   },
   f_flag(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a, 1, 0.15); if (!K) return; const M = this.cc.red, L = this.cc.line, t = this._now / 300 + e.ph1;
@@ -414,15 +403,13 @@ Object.assign(G, {
     B.fill(K.poly([[-0.85, -0.52], [0.25, -0.52], [0.25, 0.42], [-0.85, 0.42]]), M);
     B.fill(K.poly([[0.25, -0.82], [0.9, -0.82], [0.9, 0.42], [0.25, 0.42]]), this.mix(M, INK, 0.15));
     B.fill(K.poly([[0.4, -0.66], [0.75, -0.66], [0.75, -0.28], [0.4, -0.28]]), L);
-    B.fill(K.poly([[-0.85, 0.05], [0.9, 0.05], [0.9, 0.16], [-0.85, 0.16]]), L);
     this.wheels(B, K, [-0.58, -0.08, 0.6], 0.5, 0.18);
   },
   f_bus(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a, 1, 0.15); if (!K) return; const M = this.cc.red, L = this.cc.line;
     B.fill(pts(K, [[-0.95, 0.42], [-0.95, 0.42], [-0.95, -0.5], [-0.85, -0.6], [0.8, -0.6], [0.95, -0.4], [0.95, 0.42], [0.95, 0.42]]), M);
-    for (let i = 0; i < 4; i++) B.fill(K.poly([[-0.82 + i * 0.36, -0.46], [-0.56 + i * 0.36, -0.46], [-0.56 + i * 0.36, -0.12], [-0.82 + i * 0.36, -0.12]]), L);
+    for (let i = 0; i < 3; i++) B.fill(K.poly([[-0.8 + i * 0.46, -0.46], [-0.46 + i * 0.46, -0.46], [-0.46 + i * 0.46, -0.1], [-0.8 + i * 0.46, -0.1]]), L);
     B.fill(K.poly([[0.62, -0.46], [0.86, -0.46], [0.86, 0.3], [0.62, 0.3]]), L);
-    B.fill(K.poly([[-0.95, 0.06], [0.6, 0.06], [0.6, 0.14], [-0.95, 0.14]]), WHITE);
     this.wheels(B, K, [-0.55, 0.5], 0.44, 0.17);
   },
   f_truck(B, cx, cy, R, rot, e, a) {
@@ -435,7 +422,7 @@ Object.assign(G, {
   f_skull(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line, j = Math.max(0, Math.sin(this._now / 200 + e.ph1)) * 0.06;
     B.fill(K.poly([[-0.34, 0.22 + j], [0.34, 0.22 + j], [0.3, 0.66 + j], [-0.3, 0.66 + j]]), M);
-    for (let i = -2; i <= 2; i++) B.stroke([K.T(i * 0.12, 0.3 + j), K.T(i * 0.12, 0.6 + j)], L, K.lw);
+    for (let i = -1; i <= 1; i++) B.stroke([K.T(i * 0.15, 0.3 + j), K.T(i * 0.12, 0.6 + j)], L, K.lw);
     B.fill(K.ell(0, -0.2, 0.66, 0.6, 0, 22), M);
     for (const sd of [-1, 1]) B.fill(K.ell(sd * 0.26, -0.14, 0.17, 0.2, sd * 0.2, 12), L);
     B.fill(K.poly([[0, 0.06], [0.08, 0.2], [-0.08, 0.2]]), L);
@@ -454,10 +441,8 @@ Object.assign(G, {
     B.fill(K.ring(0, -0.9, 0.08, 0.08, 8), Math.floor(this._now / 400 + e.ph1) % 2 ? '#FF4D6D' : L);
     B.fill(K.poly([[-0.25, 0.22], [0.25, 0.22], [0.25, 0.34], [-0.25, 0.34]]), INK);
     B.fill(K.poly([[-0.48, 0.32], [0.48, 0.32], [0.48, 0.9], [-0.48, 0.9]]), this.mix(M, INK, 0.15));
-    B.fill(K.ring(0, 0.6, 0.1, 0.1, 8), L);
-    for (const sd of [-1, 1]) B.fill(K.poly([[sd * 0.58, -0.36], [sd * 0.7, -0.36], [sd * 0.7, -0.06], [sd * 0.58, -0.06]]), L);
     B.fill(K.poly([[-0.58, -0.62], [0.58, -0.62], [0.58, 0.22], [-0.58, 0.22]]), M);
-    for (const sd of [-1, 1]) { B.fill(K.ring(sd * 0.24, -0.26, 0.14, 0.14, 12), WHITE); B.fill(K.ring(sd * 0.24, -0.26, 0.07, 0.07, 8), INK); }
+    for (const sd of [-1, 1]) B.fill(K.ring(sd * 0.24, -0.26, 0.12, 0.12, 12), L);
     B.stroke([K.T(-0.25, 0.04), K.T(0.25, 0.04)], INK, K.lw * 1.4);
   },
   f_globe(B, cx, cy, R, rot, e, a) {
@@ -468,8 +453,6 @@ Object.assign(G, {
       const xx = ((x + o + 1.6) % 1.6) - 0.8, k = Math.sqrt(Math.max(0, 1 - (xx * xx + y * y) / 0.72));
       if (k > 0.15) B.fill(K.ell(xx, y, rx * k, ry, an, 12), L);
     }
-    B.stroke(K.ell(0, 0, 0.32, 0.85, 0, 20).concat([K.T(0.32, 0)]), this.rgba(WHITE, 0.3), K.lw);
-    B.stroke([K.T(-0.85, 0), K.T(0.85, 0)], this.rgba(WHITE, 0.3), K.lw);
   },
   f_planet(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
@@ -477,7 +460,6 @@ Object.assign(G, {
     B.stroke(ring(Math.PI, Math.PI * 2), L, K.lw * 2.2);
     B.fill(K.ring(0, 0, 0.55, 0.55, 22), M);
     B.stroke([K.T(-0.5, -0.2), K.T(0, -0.14), K.T(0.5, -0.2)], this.mix(M, WHITE, 0.3), K.lw * 1.6);
-    B.stroke([K.T(-0.52, 0.12), K.T(0, 0.18), K.T(0.52, 0.12)], this.mix(M, INK, 0.2), K.lw * 1.6);
     B.stroke(ring(0, Math.PI), L, K.lw * 2.2);
   },
   f_pin(B, cx, cy, R, rot, e, a) {
@@ -489,7 +471,6 @@ Object.assign(G, {
   f_compass(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
     B.fill(K.ring(0, 0, 0.86, 0.86, 24), M); B.fill(K.ring(0, 0, 0.7, 0.7, 22), WHITE);
-    for (let i = 0; i < 4; i++) { const t = i * Math.PI / 2; B.stroke([K.T(Math.cos(t) * 0.56, Math.sin(t) * 0.56), K.T(Math.cos(t) * 0.68, Math.sin(t) * 0.68)], INK, K.lw * 1.2); }
     const N = this.kit(cx, cy, R, rot * 0.3 + Math.sin(this._now / 700 + e.ph1) * 0.5, this.sp(a));
     B.fill(N.poly([[0, -0.6], [0.12, 0], [-0.12, 0]]), '#E0262B');
     B.fill(N.poly([[0, 0.6], [0.12, 0], [-0.12, 0]]), INK);
@@ -511,8 +492,7 @@ Object.assign(G, {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line, p = [];
     for (let i = 0; i < 22; i++) { const t = i / 22 * Math.PI * 2, sn = Math.sin(t); p.push(K.T(Math.cos(t) * (0.56 + 0.1 * sn), 0.05 + sn * 0.76)); }
     B.fill(p, M);
-    for (const [x, y] of [[-0.2, -0.3], [0.22, 0.05], [-0.1, 0.4], [0.3, -0.42], [0.05, -0.08]]) B.fill(K.ring(x, y, 0.04, 0.04, 6), L);
-    B.fill(K.ell(-0.24, -0.32, 0.07, 0.16, 0.3, 8), this.rgba(WHITE, 0.6));
+    for (const [x, y] of [[-0.2, -0.25], [0.22, 0.1], [-0.05, 0.42]]) B.fill(K.ring(x, y, 0.06, 0.06, 6), L);
   },
   f_banana(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
@@ -526,7 +506,7 @@ Object.assign(G, {
     B.stroke([K.T(0, -0.62), K.T(0.05, -0.92)], '#5B3A22', K.lw * 2);
     B.fill(K.ell(0.3, -0.82, 0.24, 0.12, -0.4, 10), '#4FAE4F');
     for (const [x, y] of [[-0.42, -0.42], [-0.14, -0.46], [0.14, -0.46], [0.42, -0.42], [-0.28, -0.14], [0, -0.16], [0.28, -0.14], [-0.14, 0.14], [0.14, 0.14], [0, 0.42]]) {
-      B.fill(K.ring(x, y, 0.17, 0.17, 12), M); B.fill(K.ring(x - 0.05, y - 0.05, 0.04, 0.04, 6), L);
+      B.fill(K.ring(x, y, 0.17, 0.17, 12), M);
     }
   },
   f_pumpkin(B, cx, cy, R, rot, e, a) {
@@ -544,12 +524,12 @@ Object.assign(G, {
     B.fill(K.poly([[-0.8, 0.06], [0.8, 0.06], [0.4, 0.28], [0.2, 0.12], [-0.1, 0.3], [-0.3, 0.12]]), L);
     const lt = []; for (let i = 0; i <= 10; i++) lt.push(K.T(-0.86 + i * 0.172, -0.04 + (i % 2) * 0.1)); B.stroke(lt, '#4FAE4F', K.lw * 2.2);
     B.fill(arc(K, 0, -0.08, 0.82, 0.62, Math.PI, Math.PI * 2, 16).concat([K.T(0.82, -0.08), K.T(-0.82, -0.08)]), M);
-    for (const [x, y, an] of [[-0.4, -0.38, 0.4], [-0.05, -0.52, -0.2], [0.32, -0.36, 0.6], [0.05, -0.26, 0]]) B.fill(K.ell(x, y, 0.06, 0.03, an, 6), WHITE);
+    for (const [x, y, an] of [[-0.3, -0.4, 0.4], [0.25, -0.45, -0.3]]) B.fill(K.ell(x, y, 0.06, 0.03, an, 6), WHITE);
   },
   f_cookie(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
     B.fill(K.ring(0, 0, 0.82, 0.8, 22), M);
-    for (const [x, y, r] of [[-0.35, -0.3, 0.1], [0.18, -0.42, 0.08], [0.3, 0.1, 0.11], [-0.3, 0.25, 0.09], [0.0, 0.48, 0.08], [-0.02, -0.02, 0.07], [0.5, -0.12, 0.06]]) B.fill(K.ell(x, y, r, r * 0.8, x * 3, 8), L);
+    for (const [x, y, r] of [[-0.35, -0.25, 0.12], [0.25, 0.12, 0.13], [-0.25, 0.35, 0.11], [0.1, -0.35, 0.1]]) B.fill(K.ell(x, y, r, r * 0.8, x * 3, 8), L);
     B.fill(K.ring(0.72, -0.56, 0.24, 0.24, 14), this.pal().bg);
   },
   f_candy(B, cx, cy, R, rot, e, a) {
@@ -585,7 +565,7 @@ Object.assign(G, {
   f_feather(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot + Math.sin(this._now / 700 + e.ph1) * 0.6, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
     B.fill(pts(K, [[0.02, 0.5], [-0.32, 0.12], [-0.34, -0.42], [0.1, -0.92], [0.1, -0.92], [0.4, -0.5], [0.36, 0.08]]), M);
-    for (let i = 0; i < 4; i++) { const y = -0.55 + i * 0.25; B.stroke([K.T(0.07 + i * -0.02, y), K.T(-0.22, y + 0.12)], L, K.lw); B.stroke([K.T(0.08 + i * -0.02, y), K.T(0.3, y + 0.08)], L, K.lw); }
+    for (let i = 0; i < 2; i++) { const y = -0.4 + i * 0.4; B.stroke([K.T(0.07 + i * -0.02, y), K.T(-0.22, y + 0.12)], L, K.lw); B.stroke([K.T(0.08 + i * -0.02, y), K.T(0.3, y + 0.08)], L, K.lw); }
     B.stroke([K.T(0.12, -0.8), K.T(0.05, 0.0), K.T(-0.04, 0.95)], this.mix(M, INK, 0.4), K.lw * 1.4);
   },
   f_ladder(B, cx, cy, R, rot, e, a) {
@@ -606,7 +586,7 @@ Object.assign(G, {
     B.stroke([K.T(-0.28, -0.32), K.T(0, -0.26), K.T(0.28, -0.32)], L, K.lw * 2.6); B.stroke([K.T(0.16, -0.3), K.T(0.24, -0.06)], L, K.lw * 2.4);
     for (const sd of [-1, 1]) B.fill(K.ring(sd * 0.08, -0.6, 0.03, 0.03, 6), INK);
     B.fill(K.poly([[0, -0.54], [0.26, -0.5], [0, -0.48]]), '#FF8A1F');
-    for (const y of [-0.04, 0.12, 0.42]) B.fill(K.ring(0, y, 0.035, 0.035, 6), INK);
+    for (const y of [0.0, 0.42]) B.fill(K.ring(0, y, 0.045, 0.045, 6), INK);
     B.fill(K.poly([[-0.28, -0.74], [0.28, -0.74], [0.28, -0.7], [-0.28, -0.7]]), INK); B.fill(K.poly([[-0.17, -0.98], [0.17, -0.98], [0.17, -0.72], [-0.17, -0.72]]), INK);
     for (const sd of [-1, 1]) B.stroke([K.T(sd * 0.3, -0.1), K.T(sd * 0.62, -0.3), K.T(sd * 0.7, -0.42)], WOOD, K.lw * 1.2);
   },
@@ -651,7 +631,98 @@ Object.assign(G, {
     B.fill(K.poly([[-0.88, -0.55], [0.88, -0.55], [0.88, 0.58], [-0.88, 0.58]]), M);
     B.fill(K.poly([[-0.74, -0.42], [0.42, -0.42], [0.42, 0.44], [-0.74, 0.44]]), L);
     const y = -0.42 + ((this._now / 1400 + e.ph1) % 1) * 0.86; B.stroke([K.T(-0.74, y), K.T(0.42, y)], this.rgba(WHITE, 0.5), K.lw);
-    for (const yy of [-0.22, 0.12]) B.fill(K.ring(0.65, yy, 0.09, 0.09, 8), INK);
+    B.fill(K.ring(0.65, -0.1, 0.1, 0.1, 8), INK);
+  },
+  // ---------- fruits, dans l'esprit des roses : une forme pleine, un trait clair par-dessus, une feuille ----------
+  leafy(B, K, x, y, an, k = 1) { B.fill(K.ell(x, y, 0.26 * k, 0.11 * k, an, 10), '#4FAE4F'); },
+  // trait clair qui se dessine après l'éclosion, comme la spirale des roses
+  shine(B, K, a, p, col) { const fr = this.eo((a - 420) / 500); if (fr > 0) this.strokeRange(B, pts(K, p), 0, fr, col, K.lw * 1.3); },
+  f_strawberry(B, cx, cy, R, rot, e, a) {
+    const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
+    B.fill(pts(K, [[0, 0.92], [0.42, 0.42], [0.62, -0.15], [0.42, -0.52], [0, -0.48], [-0.42, -0.52], [-0.62, -0.15], [-0.42, 0.42]]), M);
+    for (const [x, y] of [[-0.25, -0.15], [0.2, -0.22], [0, 0.15], [-0.18, 0.45], [0.26, 0.3]]) B.fill(K.ell(x, y, 0.045, 0.07, 0, 6), L);
+    for (const an of [-0.5, 0, 0.5]) B.fill(K.ell(Math.sin(an) * 0.3, -0.58 + Math.abs(an) * 0.1, 0.24, 0.09, an, 8), '#4FAE4F');
+  },
+  f_pear(B, cx, cy, R, rot, e, a) {
+    const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
+    B.stroke([K.T(0, -0.68), K.T(0.06, -0.95)], '#7A5230', K.lw * 2);
+    this.leafy(B, K, 0.28, -0.86, -0.4);
+    B.fill(pts(K, [[0, -0.74], [0.22, -0.6], [0.3, -0.2], [0.6, 0.25], [0.56, 0.68], [0, 0.88], [-0.56, 0.68], [-0.6, 0.25], [-0.3, -0.2], [-0.22, -0.6]]), M);
+    this.shine(B, K, a, [[-0.38, 0.55], [-0.45, 0.25], [-0.22, -0.1]], L);
+  },
+  f_peach(B, cx, cy, R, rot, e, a) {
+    const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
+    B.fill(K.ring(0, 0.1, 0.76, 0.72, 20), M);
+    this.leafy(B, K, 0.3, -0.66, -0.5);
+    this.shine(B, K, a, [[0.02, -0.55], [-0.2, 0.05], [-0.02, 0.72]], L);
+  },
+  f_pineapple(B, cx, cy, R, rot, e, a) {
+    const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
+    for (const an of [-0.6, -0.25, 0, 0.25, 0.6]) B.fill(K.poly([[Math.sin(an) * 0.12 - 0.08, -0.32], [Math.sin(an) * 0.75, -0.62 - Math.cos(an) * 0.42], [Math.sin(an) * 0.12 + 0.08, -0.32]]), '#3FAE5A');
+    B.fill(K.ell(0, 0.28, 0.5, 0.66, 0, 20), M);
+    for (const d of [-0.3, 0.1]) { B.stroke([K.T(-0.42, d), K.T(0.3, d + 0.55)], L, K.lw * 1.2); B.stroke([K.T(0.42, d), K.T(-0.3, d + 0.55)], L, K.lw * 1.2); }
+  },
+  f_watermelon(B, cx, cy, R, rot, e, a) {
+    const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
+    B.fill(arc(K, 0, -0.3, 0.95, 0.95, 0, Math.PI, 18), '#3FAE5A');
+    B.fill(arc(K, 0, -0.3, 0.78, 0.78, 0, Math.PI, 18), M);
+    for (const [x, y] of [[-0.35, 0.0], [0, 0.2], [0.35, 0.0], [-0.12, -0.12], [0.18, -0.15]]) B.fill(K.ell(x, y, 0.04, 0.07, x, 6), L);
+  },
+  f_kiwi(B, cx, cy, R, rot, e, a) {
+    const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
+    B.fill(K.ring(0, 0, 0.82, 0.76, 20), '#8A6236');
+    B.fill(K.ring(0, 0, 0.7, 0.64, 20), M);
+    B.fill(K.ell(0, 0, 0.24, 0.18, 0, 12), L);
+    for (let i = 0; i < 8; i++) { const t = i / 8 * Math.PI * 2; B.fill(K.ell(Math.cos(t) * 0.36, Math.sin(t) * 0.32, 0.03, 0.06, t + 1.57, 6), INK); }
+  },
+  f_plum(B, cx, cy, R, rot, e, a) {
+    const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
+    B.stroke([K.T(0, -0.58), K.T(-0.08, -0.88)], '#7A5230', K.lw * 2);
+    B.fill(K.ell(0, 0.1, 0.64, 0.72, 0.15, 20), M);
+    this.shine(B, K, a, [[-0.3, -0.35], [-0.42, 0.0], [-0.3, 0.35]], L);
+  },
+  f_blueberry(B, cx, cy, R, rot, e, a) {
+    const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
+    for (const [x, y, r] of [[-0.36, 0.25, 0.4], [0.36, 0.3, 0.38], [0, -0.25, 0.42]]) {
+      B.fill(K.ring(x, y, r, r, 16), M);
+      B.stroke([K.T(x - 0.09, y - r * 0.55), K.T(x, y - r * 0.4), K.T(x + 0.09, y - r * 0.55)], L, K.lw * 1.2);
+    }
+  },
+  f_raspberry(B, cx, cy, R, rot, e, a) {
+    const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
+    for (const [x, y] of [[-0.36, -0.3], [0, -0.38], [0.36, -0.3], [-0.42, 0.05], [0, 0.0], [0.42, 0.05], [-0.25, 0.38], [0.25, 0.38], [0, 0.66]]) B.fill(K.ring(x, y, 0.24, 0.24, 12), M);
+    for (const [x, y] of [[-0.1, -0.48], [0.3, -0.1], [-0.3, 0.25]]) B.fill(K.ring(x, y, 0.05, 0.05, 6), L);
+    for (const an of [-0.6, 0, 0.6]) B.fill(K.ell(Math.sin(an) * 0.25, -0.62, 0.2, 0.07, an, 8), '#4FAE4F');
+  },
+  f_mango(B, cx, cy, R, rot, e, a) {
+    const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
+    this.leafy(B, K, 0.42, -0.66, -0.7, 1.2);
+    B.fill(pts(K, [[0.15, -0.66], [0.62, -0.4], [0.72, 0.12], [0.4, 0.62], [-0.1, 0.74], [-0.6, 0.42], [-0.68, -0.05], [-0.35, -0.5]]), M);
+    B.fill(K.ell(0.3, -0.2, 0.3, 0.24, 0.4, 12), L);
+  },
+  f_apricot(B, cx, cy, R, rot, e, a) {
+    const K = go(this, cx, cy, R, rot, a, 0.85); if (!K) return; const M = this.cc.red, L = this.cc.line;
+    B.fill(K.ring(0, 0.05, 0.72, 0.7, 20), M);
+    B.fill(K.ell(-0.25, -0.15, 0.28, 0.22, 0.3, 12), L);
+    this.shine(B, K, a, [[0.08, -0.6], [0.22, 0.0], [0.05, 0.68]], this.mix(M, INK, 0.2));
+  },
+  f_pomegranate(B, cx, cy, R, rot, e, a) {
+    const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
+    B.fill(K.poly([[-0.24, -0.55], [-0.28, -0.85], [-0.1, -0.68], [0, -0.9], [0.1, -0.68], [0.28, -0.85], [0.24, -0.55]]), this.mix(M, INK, 0.2));
+    B.fill(K.ring(0, 0.1, 0.74, 0.7, 20), M);
+    this.shine(B, K, a, [[-0.45, -0.15], [-0.3, -0.4], [0, -0.48]], L);
+  },
+  f_melon(B, cx, cy, R, rot, e, a) {
+    const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line, t0 = 0.15 * Math.PI, t1 = 0.85 * Math.PI;
+    const band = (ax, ay, bx, by) => { const o = arc(K, 0, -0.45, ax, ay, t0, t1, 16), n = arc(K, 0, -0.45, bx, by, t1, t0, 16); return [o[0], ...o, o[o.length - 1], n[0], ...n, n[n.length - 1]]; };
+    B.fill(band(0.95, 1.05, 0.82, 0.9), L);
+    B.fill(band(0.82, 0.9, 0.3, 0.32), M);
+  },
+  f_avocado(B, cx, cy, R, rot, e, a) {
+    const K = go(this, cx, cy, R, rot, a); if (!K) return; const M = this.cc.red, L = this.cc.line;
+    const shape = k => pts(K, [[0, -0.85 * k], [0.32 * k, -0.6 * k], [0.62 * k, 0.2 * k], [0.5 * k, 0.7 * k], [0, 0.88 * k], [-0.5 * k, 0.7 * k], [-0.62 * k, 0.2 * k], [-0.32 * k, -0.6 * k]].map(q => [q[0], q[1] + 0.05]));
+    B.fill(shape(1), this.mix(M, INK, 0.35)); B.fill(shape(0.82), L);
+    B.fill(K.ring(0, 0.28, 0.3, 0.3, 14), '#8A5A2B');
   }
 });
 })();

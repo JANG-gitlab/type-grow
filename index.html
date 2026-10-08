@@ -120,7 +120,7 @@ class Garden {
     fleur: C(['rose', 'daisy', 'tulip', 'sun'], '#3FA45B', { rp: [0.65, 0.3] }),
     marguerite: C('daisy', '#6BCB77'), tulipe: C('tulip', '#5BBF6A'), tournesol: C('sun', '#4FAE4F', { sw: 1.2 }),
     pomme: C('apple', '#4FAE4F', { sw: 1.3 }), cerise: C('cherry', '#4FAE4F', { sw: 1.3 }), orange: C('orange', '#4FAE4F', { sw: 1.3 }), citron: C('lemon', '#4FAE4F', { sw: 1.3 }),
-    fruit: C(['apple', 'cherry', 'orange', 'lemon'], '#4FAE4F', { rp: [0.65, 0.3], sw: 1.3 }),
+    fruit: C(['apple', 'cherry', 'orange', 'lemon', 'strawberry', 'pear', 'peach', 'plum', 'apricot'], '#4FAE4F', { rp: [0.65, 0.3], sw: 1.3 }),
     legume: C(['tomato', 'carrot'], '#5BAE4A', { sw: 1.2 }), plante: C(null, '#3FBF5A', { rp: [0, 0], leaf: 2.2, dens: 1.4 }), arbre: C('tree', '#7A5A35', { sw: 1.3 }), palmier: C('palm', '#7A5A35', { sw: 1.3 }),
     cactus: C('cactus', '#3FA55B'), herbe: C('grass', '#4FC067', { sw: 0.8 }),
     champignon: C('mushroom', '#9C8F7A'), cereale: C('wheat', '#C9B458'),
@@ -266,12 +266,12 @@ class Garden {
   MOTIFS = [
     ['fleurs', 'rose lavande tulipe tournesol marguerite coquelicot sakura pivoine lys orchidee lotus muguet'],
     ['arbres et plantes', 'chene sapin palmier bambou cactus champignon'],
-    ['fruits', 'pomme cerise citron orange banane raisin'],
+    ['fruits', 'pomme cerise fraise framboise myrtille poire peche abricot prune orange citron banane raisin ananas mangue kiwi pasteque melon grenade avocat'],
     ['ciel et nature', 'etoile lune nuage neige feu amour arcenciel papillon'],
     ['animaux', 'chat chien licorne dragon'],
     ['objets', 'avion voiture bateau velo fusee maison couronne parapluie ballon livre cadeau robot fantome']
   ];
-  LABELS = { orchidee: 'orchidée', chene: 'chêne', etoile: 'étoile', amour: 'cœur', arcenciel: 'arc-en-ciel', fusee: 'fusée', fantome: 'fantôme', velo: 'vélo', muguet: 'muguet', lys: 'lys' };
+  LABELS = { peche: 'pêche', pasteque: 'pastèque', orchidee: 'orchidée', chene: 'chêne', etoile: 'étoile', amour: 'cœur', arcenciel: 'arc-en-ciel', fusee: 'fusée', fantome: 'fantôme', velo: 'vélo', muguet: 'muguet', lys: 'lys' };
   buildMotifs() {
     const sel = document.getElementById('motif');
     sel.innerHTML = '<option value="">motif : libre</option>' + this.MOTIFS.map(([g, ids]) => `<optgroup label="${g}">` +
@@ -327,7 +327,7 @@ class Garden {
     this.obj = new Map();
     for (const [id, o] of Object.entries(this.OBJ || {})) {
       if (!o.to) { this.CATS[id] = { rp: [0.6, 0.3], ...o, name: id }; if (o.c) this.FC[o.fl] = o.c; }
-      if (o.n) o.n.split(' ').forEach(w => this.dict.set(w, id));
+      if (o.n) o.n.split(' ').forEach(w => { const n = this.norm(w); if (n) this.dict.set(n, id); });
       o.w.split(' ').forEach(w => { const n = this.norm(w); if (n && !this.obj.has(n)) this.obj.set(n, o.to || id); });
     }
     // espèces de la flore (flore.js) : chacune devient sa propre catégorie
@@ -1072,8 +1072,31 @@ class Garden {
     const keep = this.cc, t = this.ck && this.ck.tint, P = this.pal().C, c = this.duo ? [P.red, P.line] : t ? [t, this.mix(t, '#FFFFFF', 0.55)] : (this.FC[e.fl] || this.FC.rose);
     this.cc = { ...keep, red: c[0], line: c[1] };
     const f = this['f_' + e.fl], fs = this.FLW && this.FLW[e.fl];
-    if (fs) this.flower(B, cx, cy, R, rot, e, a, tl, fs); else if (f) f.call(this, B, cx, cy, R, rot, e, a, tl); else this.rose(B, cx, cy, R, rot, e, a, tl);
+    if (fs) this.flower(B, cx, cy, R, rot, e, a, tl, fs); else if (f) f.call(this, this.hand(B, R, e.ph1), cx, cy, R, rot, e, a, tl); else this.rose(B, cx, cy, R, rot, e, a, tl);
     this.cc = keep;
+  }
+  // crayon maladroit, comme les roses : chaque contour tremble un peu (bords bombés, coins de travers),
+  // toujours de la même façon pour un motif donné pour que rien ne scintille
+  hand(B, R, sd) {
+    const A = R * 0.06; let c = 0;
+    const h = i => { const v = Math.sin(i * 127.1 + sd * 311.7) * 43758.5453; return v - Math.floor(v) - 0.5; };
+    const wob = (p, closed) => {
+      const n = p.length; if (n < 2) return p;
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+      for (const q of p) { if (q[0] < x0) x0 = q[0]; if (q[0] > x1) x1 = q[0]; if (q[1] < y0) y0 = q[1]; if (q[1] > y1) y1 = q[1]; }
+      const sz = Math.hypot(x1 - x0, y1 - y0), a = Math.min(A, sz * 0.07); if (a < 0.3) return p;
+      // les longs bords reçoivent des points intermédiaires pour pouvoir se bomber
+      const q = [], L = []; let t = 0;
+      for (let i = 0; i < n; i++) {
+        const u = p[i], v = p[(i + 1) % n], d = Math.hypot(v[0] - u[0], v[1] - u[1]);
+        q.push(u); L.push(t);
+        if (i < n - 1 || closed) { if (d > sz * 0.22) { q.push([(u[0] + v[0]) / 2, (u[1] + v[1]) / 2]); L.push(t + d / 2); } t += d; }
+      }
+      // déformation lente le long du contour : les points doublés (coins) bougent ensemble
+      const k = c++, f = 2 + (k % 2), p1 = h(k * 4) * 12.6, p2 = h(k * 4 + 1) * 12.6, p3 = h(k * 4 + 2) * 12.6, p4 = h(k * 4 + 3) * 12.6, T = t || 1;
+      return q.map((pt, i) => { const u = L[i] / T * Math.PI * 2; return [pt[0] + a * (Math.sin(u * f + p1) * 0.7 + Math.sin(u * 5 + p2) * 0.3), pt[1] + a * (Math.sin(u * f + p3) * 0.7 + Math.sin(u * 4 + p4) * 0.3)]; });
+    };
+    return { ...B, fill: (p, col) => B.fill(wob(p, true), col), stroke: (p, col, w) => B.stroke(wob(p, false), col, w * (1 + h(c * 7 + 3) * 0.35)) };
   }
   kit(cx, cy, R, rot, k, fx = 1) {
     const cr = Math.cos(rot), sr = Math.sin(rot);
