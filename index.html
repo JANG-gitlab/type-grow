@@ -1072,7 +1072,7 @@ class Garden {
     const keep = this.cc, t = this.ck && this.ck.tint, P = this.pal().C, c = this.duo ? [P.red, P.line] : t ? [t, this.mix(t, '#FFFFFF', 0.55)] : (this.FC[e.fl] || this.FC.rose);
     this.cc = { ...keep, red: c[0], line: c[1] };
     const f = this['f_' + e.fl], fs = this.FLW && this.FLW[e.fl];
-    if (fs) this.flower(B, cx, cy, R, rot, e, a, tl, fs); else if (f) f.call(this, this.hand(B, R, e.ph1), cx, cy, R, rot, e, a, tl); else this.rose(B, cx, cy, R, rot, e, a, tl);
+    if (fs) this.flower(this.hand(B, R, e.ph1), cx, cy, R, rot, e, a, tl, fs); else if (f) f.call(this, this.hand(B, R, e.ph1), cx, cy, R, rot, e, a, tl); else this.rose(B, cx, cy, R, rot, e, a, tl);
     this.cc = keep;
   }
   // crayon maladroit, comme les roses : chaque contour tremble un peu (bords bombés, coins de travers),
@@ -1912,7 +1912,7 @@ class Garden {
     const S = st.S, j = this.jit(e.id, f, amp), wx = (x, y) => this.wpt(st, l, l.x + x * S + j[0], l.y + y * S + j[1]);
     if (e.t === 'leaf') {
       const sc = this.spr((age - e.d0) / 1000, 7, 15) * kk; if (sc <= 0) return;
-      const p = wx(e.x, e.y); this.leaf(B, p[0], p[1], e.a + j[2], e.L * S * sc, e.bend);
+      const p = wx(e.x, e.y), L = e.L * S * sc; this.leaf(this.hand(B, L * 0.7, e.id), p[0], p[1], e.a + j[2], L, e.bend);
     } else if (e.t === 'rose') {
       const a = age - e.d0; if (a < 0 || kk <= 0.001) return;
       const p = wx(e.x, e.y), tl = this.faceTurn(e, p[0], p[1]);

@@ -379,14 +379,53 @@ Object.assign(G, {
     B.stroke([K.T(-0.2, -0.95), K.T(0.2, -0.95)], WOOD, K.lw * 3);
     B.fill(pts(K, [[-0.36, 0.1], [-0.36, 0.1], [0.36, 0.1], [0.36, 0.1], [0.36, 0.55], [0, 0.98], [0, 0.98], [-0.36, 0.55]]), M);
   },
+  // le drapeau du pays de la langue du navigateur, en quelques aplats
   f_flag(B, cx, cy, R, rot, e, a) {
-    const K = go(this, cx, cy, R, rot, a, 1, 0.15); if (!K) return; const M = this.cc.red, L = this.cc.line, t = this._now / 300 + e.ph1;
+    const K = go(this, cx, cy, R, rot, a, 1, 0.15); if (!K) return; const t = this._now / 300 + e.ph1;
     B.stroke([K.T(-0.72, -0.95), K.T(-0.72, 0.95)], INK, K.lw * 1.8);
-    const edge = (y, n = 8) => { const p = []; for (let i = 0; i <= n; i++) { const u = i / n; p.push([-0.7 + u * 1.55, y + Math.sin(t - u * 4) * 0.1 * u]); } return p; };
-    const tp = edge(-0.88), md = edge(-0.52), bt = edge(-0.16);
-    B.fill(pts(K, [tp[0], ...tp, ...md.slice().reverse(), md[0]]), M);
-    B.fill(pts(K, [md[0], ...md, ...bt.slice().reverse(), bt[0]]), L);
+    // tissu : u de la hampe au bout, v de haut en bas ; il ondule davantage loin de la hampe
+    const F = (u, v) => K.T(-0.7 + u * 1.55, -0.88 + v * 0.74 + Math.sin(t - u * 4) * 0.1 * u);
+    const poly = q => { const out = []; for (let k = 0; k < q.length; k++) { const [u0, v0] = q[k], [u1, v1] = q[(k + 1) % q.length], n = Math.max(1, Math.ceil(Math.abs(u1 - u0) * 6)); out.push(F(u0, v0)); if (n === 1) out.push(F(u0, v0)); for (let m = 1; m < n; m++) out.push(F(u0 + (u1 - u0) * m / n, v0 + (v1 - v0) * m / n)); } return out; };
+    const box = (u0, v0, u1, v1, c) => B.fill(poly([[u0, v0], [u1, v0], [u1, v1], [u0, v1]]), c);
+    const AR = 0.74 / 1.55, ring = (u, v, r, c) => { const q = []; for (let k = 0; k < 14; k++) { const th = k / 14 * Math.PI * 2; q.push(F(u + Math.cos(th) * r * AR, v + Math.sin(th) * r)); } B.fill(q, c); };
+    const star = (u, v, r, c) => { const q = []; for (let k = 0; k < 10; k++) { const th = -Math.PI / 2 + k * Math.PI / 5, rr = k % 2 ? r * 0.42 : r; q.push([u + Math.cos(th) * rr * AR, v + Math.sin(th) * rr]); } B.fill(poly(q), c); };
+    const band = (u0, v0, u1, v1, w, c) => { const dx = (v1 - v0), dy = -(u1 - u0) * AR, l = Math.hypot(dx, dy) || 1, ox = dx / l * w * AR, oy = dy / l * w; B.fill(poly([[u0 - ox, v0 - oy], [u1 - ox, v1 - oy], [u1 + ox, v1 + oy], [u0 + ox, v0 + oy]]), c); };
+    const cres = (u, v, r, c) => { const q = []; for (let k = 0; k <= 12; k++) { const th = Math.PI * (0.3 + 1.4 * k / 12); q.push(F(u + Math.cos(th) * r * AR, v + Math.sin(th) * r)); } for (let k = 12; k >= 0; k--) { const th = Math.PI * (0.38 + 1.24 * k / 12); q.push(F(u + (0.32 + Math.cos(th) * 0.78) * r * AR, v + Math.sin(th) * r * 0.78)); } B.fill(q, c); };
+    const fl = this.FLAGS[this.flagCode()] || ['h', [this.cc.red, this.cc.line]];
+    const [dir, cols, wts] = fl, W = wts || cols.map(() => 1), tot = W.reduce((x, y) => x + y, 0); let acc = 0;
+    cols.forEach((c, k) => { const a0 = acc / tot, a1 = (acc += W[k]) / tot; if (dir === 'v') box(a0, 0, a1, 1, c); else box(0, a0, 1, a1, c); });
+    if (fl[3]) fl[3]({ box, ring, star, band, cres, shape: (q, c) => B.fill(poly(q), c) });
   },
+  // pays : la région de la langue (fr-CA → Canada), sinon le pays le plus courant pour la langue
+  flagCode() {
+    if (this._flag) return this._flag;
+    const L = ((navigator.languages && navigator.languages[0]) || navigator.language || 'fr').split('-'), rg = (L[1] || '').toUpperCase();
+    const BY = { fr: 'FR', en: 'US', es: 'ES', de: 'DE', it: 'IT', pt: 'PT', nl: 'NL', ja: 'JP', zh: 'CN', ko: 'KR', ru: 'RU', pl: 'PL', uk: 'UA', sv: 'SE', nb: 'NO', no: 'NO', nn: 'NO', da: 'DK', fi: 'FI', tr: 'TR', el: 'GR', ar: 'EG', hi: 'IN' };
+    return (this._flag = this.FLAGS[rg] ? rg : BY[L[0].toLowerCase()] || '');
+  },
+  FLAGS: (() => {
+    const R = '#E8283A', W = '#FFFFFF', Bl = '#1F3FA0', Y = '#FFCE1F', Gr = '#1E8A4C', K = '#1A1A1A';
+    const nordic = (bg, c1, c2) => ['h', [bg], 0, d => { d.box(0.28, 0, 0.44, 1, c1); d.box(0, 0.38, 1, 0.62, c1); if (c2) { d.box(0.32, 0, 0.4, 1, c2); d.box(0, 0.44, 1, 0.56, c2); } }];
+    return {
+      FR: ['v', ['#2350A8', W, R]], IT: ['v', ['#1E8A4C', W, R]], BE: ['v', [K, Y, R]], IE: ['v', ['#1E9A5A', W, '#FF883E']],
+      DE: ['h', [K, '#DD1C1C', Y]], NL: ['h', ['#C42B32', W, '#2350A8']], AT: ['h', [R, W, R]], RU: ['h', [W, '#2350A8', R]],
+      PL: ['h', [W, R]], UA: ['h', ['#2A6BD1', Y]], ES: ['h', ['#C4242B', Y, '#C4242B'], [1, 2, 1]],
+      PT: ['v', ['#1E7A3C', R], [2, 3], d => d.ring(0.4, 0.5, 0.2, Y)],
+      JP: ['h', [W], 0, d => d.ring(0.5, 0.5, 0.3, R)], CN: ['h', [R], 0, d => d.star(0.2, 0.3, 0.2, Y)],
+      KR: ['h', [W], 0, d => { d.ring(0.5, 0.5, 0.26, R); d.ring(0.53, 0.6, 0.15, '#2350A8'); }],
+      US: ['h', [R, W, R, W, R, W, R], 0, d => { d.box(0, 0, 0.42, 4 / 7, Bl); for (const [u, v] of [[0.1, 0.15], [0.25, 0.3], [0.1, 0.45], [0.32, 0.12]]) d.ring(u, v, 0.04, W); }],
+      GB: ['h', [Bl], 0, d => { d.band(0, 0, 1, 1, 0.12, W); d.band(0, 1, 1, 0, 0.12, W); d.box(0.41, 0, 0.59, 1, W); d.box(0, 0.36, 1, 0.64, W); d.box(0.45, 0, 0.55, 1, R); d.box(0, 0.42, 1, 0.58, R); }],
+      CA: ['v', [R, W, R], [1, 2, 1], d => d.star(0.5, 0.52, 0.3, R)], CH: ['h', [R], 0, d => { d.box(0.44, 0.2, 0.56, 0.8, W); d.box(0.32, 0.4, 0.68, 0.6, W); }],
+      SE: nordic('#2A6BD1', Y), NO: nordic(R, W, '#2350A8'), DK: nordic(R, W), FI: nordic(W, '#2350A8'),
+      BR: ['h', [Gr], 0, d => { d.shape([[0.08, 0.5], [0.5, 0.1], [0.92, 0.5], [0.5, 0.9]], Y); d.ring(0.5, 0.5, 0.2, Bl); }],
+      IN: ['h', ['#FF9933', W, '#138808'], 0, d => d.ring(0.5, 0.5, 0.1, '#1F3FA0')], MX: ['v', ['#0A6B47', W, '#C8102E'], 0, d => d.ring(0.5, 0.5, 0.1, '#8A5A2B')],
+      AR: ['h', ['#74ACDF', W, '#74ACDF'], 0, d => d.ring(0.5, 0.5, 0.1, Y)], EG: ['h', ['#CE1126', W, K], 0, d => d.ring(0.5, 0.5, 0.09, '#C09300')],
+      MA: ['h', ['#C1272D'], 0, d => d.star(0.5, 0.5, 0.26, '#006233')], DZ: ['v', ['#006233', W], 0, d => { d.cres(0.5, 0.5, 0.26, R); d.star(0.6, 0.5, 0.1, R); }],
+      TN: ['h', [R], 0, d => { d.ring(0.5, 0.5, 0.32, W); d.cres(0.47, 0.5, 0.22, R); d.star(0.56, 0.5, 0.1, R); }],
+      TR: ['h', [R], 0, d => { d.cres(0.4, 0.5, 0.3, W); d.star(0.6, 0.5, 0.12, W); }],
+      SA: ['h', ['#006C35'], 0, d => d.box(0.25, 0.68, 0.75, 0.74, W)], GR: ['h', ['#0D5EAF', W, '#0D5EAF', W, '#0D5EAF'], 0, d => { d.box(0, 0, 0.4, 0.6, '#0D5EAF'); d.box(0.16, 0, 0.24, 0.6, W); d.box(0, 0.24, 0.4, 0.36, W); }]
+    };
+  })(),
   f_tent(B, cx, cy, R, rot, e, a) {
     const K = go(this, cx, cy, R, rot, a, 1, 0.15); if (!K) return; const M = this.cc.red, L = this.cc.line;
     B.fill(K.poly([[0, -0.82], [0.96, 0.7], [-0.96, 0.7]]), M);
