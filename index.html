@@ -22,6 +22,9 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;overscroll-behavi
 .sw i{width:10px;height:10px;border-radius:999px}
 .btn{background:transparent;border:1px solid #3a3a3a;color:#bdbdbd;font:inherit;padding:8px 14px;border-radius:999px;cursor:pointer}
 .btn:hover{border-color:#fff;color:#fff}
+#motifIn{width:118px;cursor:text;outline:none;transition:transform .15s}
+#motifIn.non{animation:non .35s}
+@keyframes non{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 select.btn{-webkit-appearance:none;appearance:none;padding-right:28px;background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 15px) 52%,calc(100% - 11px) 52%;background-size:4px 4px;background-repeat:no-repeat;max-width:46vw}
 #hints{transition:opacity .9s}
 .coarse{display:none}
@@ -29,12 +32,14 @@ select.btn{-webkit-appearance:none;appearance:none;padding-right:28px;background
 @media (max-width:600px){
   #bar{left:16px;right:16px;bottom:calc(14px + env(safe-area-inset-bottom));gap:10px}
   #hints{gap:12px;font-size:11px}
-  #ctrls{flex:1 1 100%;justify-content:space-between}
+  #ctrls{flex:1 1 100%;justify-content:flex-start}
+  #pal{flex:1 1 100%;justify-content:space-between}
   #pal{gap:4px}
   .sw{width:clamp(13px,calc((100vw - 183px) / 10),22px);height:clamp(13px,calc((100vw - 183px) / 10),22px)}
   .sw i{width:46%;height:46%}
   .btn{padding:7px 11px}
   select.btn{max-width:34vw;padding-right:24px;text-overflow:ellipsis}
+  #motifIn{width:30vw}
 }
 </style>
 </head>
@@ -52,6 +57,7 @@ select.btn{-webkit-appearance:none;appearance:none;padding-right:28px;background
     <div id="ctrls">
       <div id="pal"></div>
       <select class="btn" id="motif" aria-label="un seul motif pour tout le texte" title="un seul motif pour tout le texte"></select>
+      <input class="btn" id="motifIn" placeholder="ou écris-le…" aria-label="écrire le motif de tout le texte" title="écris un motif puis Entrée : lavande, cerisier, licorne…" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="done">
       <button class="btn" id="mode"></button>
       <button class="btn" id="png">PNG</button>
       <button class="btn" id="svg">SVG</button>
@@ -192,7 +198,7 @@ class Garden {
     this.app.addEventListener('pointerdown', e => {
       const touch = e.pointerType && e.pointerType !== 'mouse', onCv = e.target === this.cv;
       if (touch) { if (e.cancelable && (onCv || e.target.closest('button'))) e.preventDefault(); }
-      else this.inp.focus({ preventScroll: true });
+      else if (e.target.id !== 'motifIn') this.inp.focus({ preventScroll: true });
       if (onCv) this.spawnFly(e.clientX, e.clientY);
     });
     this.app.addEventListener('click', e => {
@@ -264,8 +270,29 @@ class Garden {
     const sel = document.getElementById('motif');
     sel.innerHTML = '<option value="">motif : libre</option>' + this.MOTIFS.map(([g, ids]) => `<optgroup label="${g}">` +
       ids.split(' ').filter(id => this.CATS[id]).map(id => `<option value="${id}">tout en ${this.LABELS[id] || id}</option>`).join('') + '</optgroup>').join('');
-    try { const f = localStorage.getItem('tg-motif'); if (f && this.CATS[f]) { this.force = f; sel.value = f; } } catch (e) { /* stockage indisponible */ }
+    try { const f = localStorage.getItem('tg-motif'); if (f && this.CATS[f]) { this.force = f; this.motifOpt(f); } } catch (e) { /* stockage indisponible */ }
     sel.onchange = () => { this.setForce(sel.value); this.refocus(); };
+    // ou on l'écrit : n'importe quel mot que le jardin connaît (lavande, cerisier, licorne, fusée…)
+    const inp = document.getElementById('motifIn');
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { inp.value = ''; this.refocus(); return; }
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      const v = inp.value.trim(), k = v ? this.lookup(v) : null;
+      if (!v) { this.motifOpt(''); this.setForce(''); this.refocus(); return; }
+      if (!k || this.CATS[k.name] !== k || ['pousse', 'fane'].includes(k.name)) { inp.classList.remove('non'); void inp.offsetWidth; inp.classList.add('non'); return; }
+      inp.value = ''; this.motifOpt(k.name, v); this.setForce(k.name); inp.blur(); this.refocus();
+    });
+  }
+  // sélectionne le motif dans la liste, en l'y ajoutant s'il a été écrit
+  motifOpt(id, typed) {
+    const sel = document.getElementById('motif');
+    if (id && ![...sel.options].some(o => o.value === id)) {
+      let g = sel.querySelector('optgroup[data-ecrit]');
+      if (!g) { g = document.createElement('optgroup'); g.label = 'écrits'; g.dataset.ecrit = 1; sel.appendChild(g); }
+      const o = document.createElement('option'); o.value = id; o.textContent = 'tout en ' + (this.LABELS[id] || (typed && this.norm(typed) === id ? typed.toLowerCase() : id)); g.appendChild(o);
+    }
+    sel.value = id;
   }
   setForce(id) {
     this.force = this.CATS[id] ? id : null;
@@ -506,6 +533,7 @@ class Garden {
     document.getElementById('pal').style.background = p.bg;
     document.querySelectorAll('.btn').forEach(b => { b.style.color = ui; b.style.borderColor = this.mix(ui, p.bg, 0.65); });
     document.getElementById('motif').style.backgroundColor = p.bg;
+    document.getElementById('motifIn').style.backgroundColor = p.bg;
     const md = document.getElementById('mode');
     md.textContent = this.duo ? 'duo' : 'naturel';
     md.title = this.duo ? 'tout le jardin dans les couleurs de la palette' : 'chaque motif garde ses couleurs';
@@ -822,7 +850,7 @@ class Garden {
       return;
     }
     if (e.target && e.target.tagName === 'BUTTON' && (e.key === 'Enter' || e.key === ' ')) return;
-    if (e.target && e.target.tagName === 'SELECT') return;
+    if (e.target && (e.target.tagName === 'SELECT' || e.target.id === 'motifIn')) return;
     // accent en attente (´ ^ ¨…) : on laisse le système composer la lettre, elle arrive par le champ
     if (e.key === 'Dead') { this.deadKey = true; return; }
     if (e.isComposing || this.composing) return;

@@ -8,4 +8,4 @@
 
 `?t=texte` dans l'adresse fait pousser un texte tout seul.
 
-À l'arrivée, « Grow your garden » s'écrit tout seul ; il fane dès qu'on tape. Le menu « motif » fait pousser tout le texte dans un seul dessin (tout en lavande, en rose, en avion…).
+À l'arrivée, « Grow your garden » s'écrit tout seul ; il fane dès qu'on tape. Le menu « motif » fait pousser tout le texte dans un seul dessin (tout en lavande, en rose, en avion…) ; on peut aussi écrire le motif à côté, puis Entrée.
