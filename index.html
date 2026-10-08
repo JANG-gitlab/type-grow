@@ -409,9 +409,9 @@ class Garden {
     const col = this.cols.get(w); if (col) return this.colKind(col);
     const c = this.find(w), k = c ? this.CATS[c] : null;
     // un objet précis qui n'a qu'un dessin de famille (ou rien) prend son propre dessin
-    // WordNet : quand le jardin ne sait rien, ou seulement une famille vague, ou ce que dit le lexique seul
-    const F = this.fall, fw = F && (F.has(w) ? w : w.length > 3 && F.has(w.replace(/s$/, '')) ? w.replace(/s$/, '') : null);
-    if (fw && (!k || this.GENERIC.includes(c) || this.lexw.has(w))) return this.CATS[F.get(fw)];
+    // WordNet : quand le jardin ne sait rien, seulement une famille vague, ce que dit le lexique seul, ou ne fait que deviner (science ≠ scie)
+    const F = this.fall, fw = F && (F.has(w) ? w : w.length > 3 && !this.dict.has(w) && F.has(w.replace(/s$/, '')) ? w.replace(/s$/, '') : null);
+    if (fw && (!k || this.GENERIC.includes(c) || this.lexw.has(w) || (fw === w && !this.dict.has(w)))) return this.CATS[F.get(fw)];
     const ow = this.obj.has(w) ? w : w.length > 3 && this.obj.has(w.replace(/s$/, '')) ? w.replace(/s$/, '') : null;
     if (ow && (!k || this.GENERIC.includes(c))) return this.CATS[this.obj.get(ow)];
     return k || null;

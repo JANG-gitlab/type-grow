@@ -351,6 +351,36 @@ crevette = shrimp.n.03 seafood.n.01
 cacahuete = peanut.n.04 nut.n.01 edible_nut.n.01
 fantome = ghost.n.01 spirit.n.04 monster.n.01
 personne = person.n.01 people.n.01
+
+# ---------- idées et mots abstraits : un dessin qui les symbolise ----------
+fane = death.n.01 death.n.02 death.n.03 dying.n.01 corpse.n.01 funeral.n.01 grave.n.02
+ampoule = light.n.01 light.n.02 luminosity.n.01 idea.n.01
+lune = darkness.n.01 night.n.01 dream.n.01 sleep.n.01
+plante = life.n.01 life.n.02 growth.n.01
+epee = war.n.01 battle.n.01 fight.n.02
+amour = friendship.n.01 kiss.n.01
+pinceau = art.n.01 color.n.01
+loupe = science.n.01 discovery.n.01 research.n.01
+livre = knowledge.n.01 education.n.01 story.n.01 history.n.01
+etoile = magic.n.01 hope.n.01 promise.n.02 wish.n.01 sky.n.01
+oeuf = birth.n.01
+orage = energy.n.01 electricity.n.01
+musique = sound.n.01 noise.n.01
+oiseau = freedom.n.01 peace.n.01
+marteau = work.n.01 job.n.01
+de = game.n.01 play.n.01 chance.n.01
+avion = travel.n.01 journey.n.01
+ile = vacation.n.01
+joie = party.n.02 celebration.n.01 festival.n.01 laughter.n.01
+cadeau = birthday.n.01
+sapin = christmas.n.01
+citrouille = halloween.n.01
+bague = wedding.n.01 marriage.n.01
+arbre = nature.n.01
+globe = world.n.01 earth.n.01
+planete = outer_space.n.01 universe.n.01
+cerveau = thought.n.01 mind.n.01 memory.n.01 intelligence.n.01
+temps = time.n.01 time.n.05 past.n.01 future.n.01
 """
 
 # sens injurieux : jamais reliés à un dessin
@@ -380,7 +410,7 @@ def main():
     cats = {c if isinstance(c, str) else c[0] for c in cats}
     ancre, manque = {}, []
     for ligne in ANCRES.strip().splitlines():
-        if not ligne.strip():
+        if not ligne.strip() or ligne.startswith('#'):
             continue
         cat, _, sens = ligne.partition('=')
         cat = cat.strip()
@@ -465,7 +495,8 @@ def main():
             if '_' in lemme or ' ' in lemme or '-' in lemme:
                 continue
             w = norm(lemme)
-            if len(w) < 2 or w in fall or w in connus or w in ecartes or w.isdigit():
+            # un seul idéogramme suffit en chinois et en japonais (死, 夢, 光), pas une syllabe kana (の, は)
+            if (len(w) < 2 and not re.match('[\u3400-\u9fff]', w)) or w in fall or w in connus or w in ecartes or w.isdigit():
                 continue
             total += 1
             ss = wn.synsets(lemme, 'n', lang=lg)
