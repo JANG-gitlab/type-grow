@@ -56,7 +56,6 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;overscroll-behavi
 </div>
 
 <script src="lexique.js"></script>
-<script src="icones.js"></script>
 <script>
 const C = (fl, stem, o) => ({ fl, stem, rp: [0.6, 0.3], ...o });
 const A = (sp, stem = '#3FBF5A') => C(null, stem, { rp: [0, 0], leaf: 2, dens: 1.3, crit: [sp] });
@@ -243,6 +242,13 @@ class Garden {
       } catch (e) { /* liste absente : aucun mot filtré */ }
     }
     if (L && L.top) for (const [cat, str] of Object.entries(L.top)) str.split(' ').forEach(w => { if (w) this.dict.set(w, cat); });
+    // objets (objets.js) : chacun a son dessin, ou rejoint une catégorie qui en a un ; leurs noms priment sur le lexique
+    this.obj = new Map();
+    for (const [id, o] of Object.entries(this.OBJ || {})) {
+      if (!o.to) { this.CATS[id] = { rp: [0.6, 0.3], ...o, name: id }; if (o.c) this.FC[o.fl] = o.c; }
+      if (o.n) o.n.split(' ').forEach(w => this.dict.set(w, id));
+      o.w.split(' ').forEach(w => { const n = this.norm(w); if (n && !this.obj.has(n)) this.obj.set(n, o.to || id); });
+    }
     // espèces de la flore (flore.js) : chacune devient sa propre catégorie
     for (const [id, sp] of Object.entries(this.SP || {})) {
       this.CATS[id] = { rp: [0.6, 0.3], ...sp.k, name: id, fl: sp.k.fl !== undefined ? sp.k.fl : id };
@@ -255,9 +261,6 @@ class Garden {
     }
     this.phr = new Map(Object.entries(this.PHR || {}).map(([k, v]) => [this.norm(k), v]));
     this.names = { f: new Set((this.NAMES || {}).f ? this.NAMES.f.split(' ') : []), m: new Set((this.NAMES || {}).m ? this.NAMES.m.split(' ') : []) };
-    // icônes (icones.js) : pour les objets sans dessin dédié
-    this.ico = new Map(); this.icoKinds = {}; this.paths = {};
-    if (window.ICO) for (const [name, str] of Object.entries(window.ICO.w)) str.split(' ').forEach(w => { if (w && !this.ico.has(w)) this.ico.set(w, name); });
     for (const [cat, ws] of Object.entries(this.OVER)) ws.forEach(w => this.dict.set(this.norm(w), cat));
     for (const [hex, ws] of Object.entries(this.COLORS)) ws.forEach(w => this.cols.set(this.norm(w), hex));
     for (const [n, ws] of Object.entries(this.NUMS)) ws.forEach(w => this.nums.set(this.norm(w), +n));
@@ -290,11 +293,6 @@ class Garden {
     return null;
   }
   GENERIC = ['objet', 'tech', 'maison', 'transport', 'sport', 'nourriture', 'musique', 'temps', 'clef', 'argent', 'corps', 'terre', 'plante', 'sauvage', 'domestique', 'nuage', 'eau', 'joie'];
-  PASTEL = ['#FFD6A5', '#CAFFBF', '#9BF6FF', '#BDB2FF', '#FFC6FF', '#FDFFB6', '#FFADAD', '#A0E7E5'];
-  iconKind(name, fam) {
-    let h = 0; for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-    return this.icoKinds[name] || (this.icoKinds[name] = { name, fl: 'ico:' + name, stem: fam ? fam.stem : '#7FA889', pc: this.PASTEL[h % this.PASTEL.length], rp: [0.6, 0.3] });
-  }
   numKind(n) { return this.numKinds[n] || (this.numKinds[n] = { name: 'nombre', num: 1, n, fl: ['daisy', 'tulip', 'sun', 'rose'], stem: '#3FA45B', rp: [1, 0] }); }
   colKind(hex) { return this.colKinds[hex] || (this.colKinds[hex] = { name: 'couleur', tint: hex, fl: ['rose', 'daisy', 'tulip'], stem: hex, rp: [0.65, 0.3] }); }
   // catégorie d'un morceau de mot, ou null
@@ -306,9 +304,9 @@ class Garden {
     const n = this.nums.get(w); if (n != null) return this.numKind(n);
     const col = this.cols.get(w); if (col) return this.colKind(col);
     const c = this.find(w), k = c ? this.CATS[c] : null;
-    // un objet précis qui n'a qu'un dessin de famille (ou rien) prend son icône
-    const iw = this.ico.has(w) ? w : w.length > 3 && this.ico.has(w.replace(/s$/, '')) ? w.replace(/s$/, '') : null;
-    if (iw && (!k || this.GENERIC.includes(c))) return this.iconKind(this.ico.get(iw), k);
+    // un objet précis qui n'a qu'un dessin de famille (ou rien) prend son propre dessin
+    const ow = this.obj.has(w) ? w : w.length > 3 && this.obj.has(w.replace(/s$/, '')) ? w.replace(/s$/, '') : null;
+    if (ow && (!k || this.GENERIC.includes(c))) return this.CATS[this.obj.get(ow)];
     return k || null;
   }
   hate(text) {
@@ -616,11 +614,6 @@ class Garden {
       fill: (p, col) => { g.beginPath(); this.path(g, p, true); g.fillStyle = this.ink(col); g.fill(); },
       stroke: (p, col, w) => { g.beginPath(); this.path(g, p, false); g.strokeStyle = this.ink(col); g.lineWidth = w; g.lineCap = 'round'; g.lineJoin = 'round'; g.stroke(); },
       rect: (x, y, w, h, col) => { g.fillStyle = col; g.fillRect(x, y, w, h); },
-      icon: (d, x, y, sz, rot, col, w) => {
-        const p = this.paths[d] || (this.paths[d] = new Path2D(d));
-        g.save(); g.translate(x, y); g.rotate(rot); g.scale(sz / 12, sz / 12); g.translate(-12, -12);
-        g.strokeStyle = this.ink(col); g.lineWidth = w; g.lineCap = 'round'; g.lineJoin = 'round'; g.stroke(p); g.restore();
-      },
       text: (ch, x, y, S, col) => { g.font = `700 ${S}px ${this.F}`; g.textAlign = 'center'; g.textBaseline = 'alphabetic'; g.fillStyle = col; g.fillText(ch, x, y); }
     };
   }
@@ -990,7 +983,7 @@ class Garden {
     const keep = this.cc, t = this.ck && this.ck.tint, P = this.pal().C, c = this.duo ? [P.red, P.line] : t ? [t, this.mix(t, '#FFFFFF', 0.55)] : (this.FC[e.fl] || this.FC.rose);
     this.cc = { ...keep, red: c[0], line: c[1] };
     const f = this['f_' + e.fl], fs = this.FLW && this.FLW[e.fl];
-    if (e.fl.startsWith('ico:')) this.iconTip(B, cx, cy, R, rot, e, a, e.fl.slice(4)); else if (fs) this.flower(B, cx, cy, R, rot, e, a, tl, fs); else if (f) f.call(this, B, cx, cy, R, rot, e, a, tl); else this.rose(B, cx, cy, R, rot, e, a, tl);
+    if (fs) this.flower(B, cx, cy, R, rot, e, a, tl, fs); else if (f) f.call(this, B, cx, cy, R, rot, e, a, tl); else this.rose(B, cx, cy, R, rot, e, a, tl);
     this.cc = keep;
   }
   kit(cx, cy, R, rot, k, fx = 1) {
@@ -1092,13 +1085,6 @@ class Garden {
   }
 
   sp(a) { return this.spr(a / 1000, 7, 14); }
-  // une icône éclose au bout de la tige : pastille dans la couleur de la famille, dessin au trait par-dessus
-  iconTip(B, cx, cy, R, rot, e, a, name) {
-    const s = this.sp(a), d = window.ICO && window.ICO.p[name]; if (s <= 0.001 || !d) return;
-    const K = this.kit(cx, cy, R, 0, s), r = R * 1.05 * s, sw = Math.sin(this._now / 900 + e.ph1) * 0.08;
-    B.fill(K.ring(0, 0, 1.05, 1.05, 22), (this.ck && this.ck.pc) || this.mix(this.cc.blue, '#FFFFFF', 0.62));
-    if (B.icon) B.icon(d, cx, cy, r * 1.25, rot * 0.3 + sw, '#14141A', 1.9);
-  }
   f_tomato(B, cx, cy, R, rot, e, a) {
     const s = this.sp(a); if (s <= 0.001) return; const K = this.kit(cx, cy, R, rot, s);
     B.fill(K.ell(0, 0.1, 0.85, 0.75, 0, 26), this.cc.red);
@@ -1841,7 +1827,6 @@ class Garden {
       fill: (p, col) => { const b = pb(); this.path(b, p, true); parts.push(`<path d="${b.d}" fill="${this.ink(col)}"/>`); },
       stroke: (p, col, w) => { const b = pb(); this.path(b, p, false); parts.push(`<path d="${b.d}" fill="none" stroke="${this.ink(col)}" stroke-width="${n(w)}" stroke-linecap="round" stroke-linejoin="round"/>`); },
       rect: () => {},
-      icon: (d, x, y, sz, rot, col, w) => parts.push(`<path d="${d}" transform="translate(${n(x)} ${n(y)}) rotate(${n(rot * 57.2958)}) scale(${n(sz / 12)}) translate(-12 -12)" fill="none" stroke="${this.ink(col)}" stroke-width="${n(w)}" stroke-linecap="round" stroke-linejoin="round"/>`),
       text: (ch, x, y, S, col) => parts.push(`<text x="${n(x)}" y="${n(y)}" text-anchor="middle" font-family="${this.F.replace(/"/g, "'")}" font-weight="700" font-size="${n(S)}" fill="${col}">${esc(ch)}</text>`)
     };
     this.render(B, performance.now(), this.mainState());
@@ -1852,6 +1837,7 @@ class Garden {
 </script>
 <script src="flore.js"></script>
 <script src="culture.js"></script>
+<script src="objets.js"></script>
 <script>new Garden();</script>
 </body>
 </html>
